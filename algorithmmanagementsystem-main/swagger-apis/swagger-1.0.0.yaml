@@ -1,0 +1,547 @@
+swagger: '2.0'
+info:
+  description: Test API
+  version: 1.0.0
+  title: Test API
+  # Team developer contact info 
+#  contact:
+#    email: [drjuhasz@wpi.edu; stmcavey@wpi.edu; ppatel2@wpi.edu; struong@wpi.edu]
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# tags are used for organizing operations
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: consumers
+  description: Operations available to regular consumers
+
+paths:
+  /getUsers:
+    get:
+      tags:
+      - admins
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Users'
+        400:
+          description:  failed to return users
+  /getUser:
+    get:
+      produces:
+      - application/json
+      responses:
+        200:
+          description: user retrieval successful
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: user retrieval failure
+  /createUser:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: User
+        description: Inventory item to add
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        201:
+          description: user created
+        400:
+          description: failed to create user
+  /deleteUser:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: DeleteUser
+        schema:
+          $ref: '#/definitions/DeleteUser'
+      responses:
+        200:
+          description: user deletion successful
+        400:
+          description: user deletion failed
+  /getClassification:
+    get:
+      produces:
+      - application/json
+      responses:
+        200:
+          description: classification retrieval successful
+          schema:
+            $ref: '#/definitions/Classification'
+        400:
+          description: classification retrieval failed
+  /mergeClassification:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Classification
+        description: classifications to merge
+        schema:
+          $ref: '#/definitions/MergeClassification'
+      responses:
+        201:
+          description: classification merge successful
+        400:
+          description: classification merge failed
+  /createClassification:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Classification
+        description: classification to add
+        schema:
+          $ref: '#/definitions/Classification'
+      responses:
+        201:
+          description: classification creation successful
+        400:
+          description: classification creation failed
+  /deleteClassification:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: deleteClassification
+        schema:
+          $ref: '#/definitions/DeleteClassification'
+      responses:
+        200:
+          description: classification deletion successful
+        400:
+          description: classification deletion failed
+  /getAlgorithm:
+    get:
+      produces:
+      - application/json
+      responses:
+        200:
+          description: algorithm retrieval successful
+          schema:
+            $ref: '#/definitions/Algorithm'
+        400:
+          description: algorithm retrieval failed
+  /reclassifyAlgorithm:
+    get:
+      produces:
+      - application/json
+      responses:
+        201:
+          description: algorithm reclassification successful
+          schema:
+            $ref: '#/definitions/Algorithm'
+        400:
+          description: algorithm retrieval failed
+  /createAlgorithm:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Algorithm
+        description: algorithm to add
+        schema:
+          $ref: '#/definitions/Algorithm'
+      responses:
+        201:
+          description: algorithm creation successful
+        400:
+          description: algorithm creation failed
+  /deleteAlgorithm:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: deleteAlgorithm
+        schema:
+          $ref: '#/definitions/DeleteAlgorithm'
+      responses:
+        200:
+          description: algorithm deletion successful
+        400:
+          description: algorithm deletion failed
+  /getProblemInstance:
+    get:
+      produces:
+      - application/json
+      responses:
+        200:
+          description: problem instance retrieval successful
+          schema:
+            $ref: '#/definitions/ProblemInstance'
+        400:
+          description: problem instance retrieval failed
+  /createProblemInstance:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: ProblemInstance
+        description: problem instance to add
+        schema:
+          $ref: '#/definitions/ProblemInstance'
+      responses:
+        201:
+          description: problem instance creation successful
+        400:
+          description: problem instance creation failed
+  /deleteProblemInstance:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: deleteProblemInstance
+        schema:
+          $ref: '#/definitions/DeleteProblemInstance'
+      responses:
+        200:
+          description: problem instance deletion successful
+        400:
+          description: problem instance deletion failed
+  /getImplementation:
+    get:
+      produces:
+      - application/json
+      responses:
+        200:
+          description: implementation retrieval successful
+          schema:
+            $ref: '#/definitions/Implementation'
+        400:
+          description: implementation retrieval failed
+  /createImplementation:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Implementation
+        description: implementation to add
+        schema:
+          $ref: '#/definitions/Implementation'
+      responses:
+        201:
+          description: implementation creation successful
+        400:
+          description: implementation creation failed
+  /deleteImplementation:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: deleteUser
+        schema:
+          $ref: '#/definitions/DeleteImplementation'
+      responses:
+        200:
+          description: implementation deletion successful
+        400:
+          description: implementation deletion failed
+  /getBenchmark:
+    get:
+      produces:
+      - application/json
+      responses:
+        200:
+          description: benchmark retrieval successful
+          schema:
+            $ref: '#/definitions/Benchmark'
+        400:
+          description: benchmark retrieval failed
+  /createBenchmark:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Benchmark
+        description: benchmark to add
+        schema:
+          $ref: '#/definitions/Benchmark'
+      responses:
+        201:
+          description: benchmark creation successful
+        400:
+          description: benchmark creation failed
+  /deleteBenchmark:
+    post:
+      tags:
+      - consumers
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: deleteUser
+        schema:
+          $ref: '#/definitions/DeleteBenchmark'
+      responses:
+        200:
+          description: benchmark deletion successful
+        400:
+          description: benchmark deletion failed
+definitions:
+  Classification:
+    type: object
+    required:
+    - classificationID
+    - description
+    - token
+    properties:
+      classificationID:
+        type: integer
+      description:
+        type: string
+      token:
+        type: string
+  MergeClassification:
+    type: object
+    required:
+#    - classificationID
+    - classificationID
+    - token
+    properties:
+#      classificationID:
+#        type: integer
+      classificationID:
+        type: integer
+      token:
+        type: string
+  Algorithm:
+    type: object
+    required:
+    - algorithmID
+    - description
+    - classificationID
+    - token
+    properties:
+      algorithmID:
+        type: integer
+      description:
+        type: string
+      token:
+        type: string
+      classificationID:
+        type: integer
+  ProblemInstance:
+    type: object
+    required:
+    - problemInstanceID
+    - description
+    - token
+    - algorithmID
+    properties:
+      problemInstanceID:
+        type: integer
+      description:
+        type: string
+      token:
+        type: string
+      algorithmID:
+        type: integer
+  Implementation:
+    type: object
+    required:
+    - implementationID
+    - file
+    - token
+    - algorithmID
+    properties:
+      implementationID:
+        type: integer
+      file:
+        type: string
+        format: binary
+      token:
+        type: string
+      algorithmID:
+        type: integer
+  Benchmark:
+    type: object
+    required:
+    - benchmarkID
+    - runDate
+    - l1cache
+    - l2cache
+    - l3cache
+    - ram
+    - cores
+    - threads
+    - cpuManufacturer
+    - implementationID
+    properties:
+      benchmarkID:
+        type: integer
+      runDate:
+        type: string
+      l1cache:
+        type: string
+      l2cache:
+        type: string
+      l3cache:
+        type: string
+      ram:
+        type: string
+      cores:
+        type: integer
+      threads:
+        type: integer
+      cpuManufacturer:
+        type: string
+      implementationID:
+        type: integer
+  Users:
+   type: array
+   items:
+      $ref: '#/definitions/User'
+  User:
+    type: object
+    required:
+    - username
+    - userpassword
+    properties:
+      username:
+        type: string
+      userpassword:
+        type: string
+      history:
+        type: string
+      token:
+        type: string
+  DeleteUser:
+    type: object
+    required:
+    - username
+    - token
+    properties:
+      username:
+        type: string
+      token:
+        type: string
+  DeleteClassification:
+    type: object
+    required:
+    - classificationID
+    - token
+    properties:
+      classificationID:
+        type: string
+      token:
+        type: string
+  DeleteAlgorithm:
+    type: object
+    required:
+    - algorithmID
+    - token
+    properties:
+      algorithmID:
+        type: string
+      token:
+        type: string
+  DeleteProblemInstance:
+    type: object
+    required:
+    - problemInstanceID
+    - token
+    properties:
+      problemInstanceID:
+        type: string
+      token:
+        type: string
+  DeleteBenchmark:
+    type: object
+    required:
+    - benchmarkID
+    - token
+    properties:
+      benchmarkID:
+        type: string
+      token:
+        type: string
+  DeleteImplementation:
+    type: object
+    required:
+    - implementationID
+    - token
+    properties:
+      implementationID:
+        type: string
+      token:
+        type: string
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+# basePath: /galatea/AlgorithmManagementSystem/1.0.0
+schemes:
+ - https
+# Added by API Auto Mocking Plugin
+basePath: /dennisjr13/Calculator/1.0.0

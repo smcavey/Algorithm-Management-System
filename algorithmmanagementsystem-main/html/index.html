@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html><head>
+
+<meta charset="utf-8" />
+
+<!-- Load JS File Scripts -->
+<script type='text/javascript' src='../js/api.js'></script>
+<script type="text/javascript" src="../js/registerUser.js"></script>
+<script type="text/javascript" src="../js/addAlgorithm.js"></script>
+
+<!-- Title area -->
+<title>Algorithm Managment System</title>
+<h1><center>Algorithm Management System</center></h1>
+<!-- Load icon/style/script libraries -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="https://code.jquery.com/mobile/git/jquery.mobile-git.js"></script>
+<link href="https://code.jquery.com/mobile/git/jquery.mobile-git.css" rel="stylesheet" type="text/css" />
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+
+<style>
+h1 {
+  color: black;
+  font-family: 'Times New Roman', Times, serif;
+}
+label {
+  display: inline-block;
+  width: 300px;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+}
+#Register button{
+  font-family: 'Times New Roman', Times, serif;
+}
+/* Style the tab */
+.tab {
+  position: relative;
+  overflow: hidden;
+  background-color: #333;
+}
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  font-weight: normal;
+  color: white;
+  font-family: 'Times New Roman', Times, serif;
+}
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+  color: black;
+}
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #04AA6D;
+  color: white;
+}
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 120px;
+  border: 1px solid #ccc;
+  border-top: none;
+  font-family: 'Times New Roman', Times, serif;
+}
+#Register {
+  display: none;
+  padding: 0px 600px;
+  border: 1px solid #ccc;
+  border-top: none;
+  }
+.topnav-right {
+  float: right;
+}
+.topnav-left {
+  float: left;
+}
+</style>
+
+</head>
+<body>
+<div class="tab">
+  <div class="topnav-left">
+    <button class="tablinks" onclick="openLink(event, 'Algorithms')"><i class="fa fa-fw fa-home"></i>Algorithms</button>
+  </div>
+  <div class="topnav-right">
+    <button class="tablinks"  onclick="openLink(event, 'Register')" id="defaultOpen"><i class="fa fa-fw fa-user"></i>Register</button>
+  </div>
+</div>
+
+
+<!--Register Page Content-->
+<div id="Register" class="tabcontent">
+	<form action="register" method="post">
+        <h2><center>Register Account</center></h2>
+        <hr />
+        <center>
+          <label for="name"><b>Name</b></label>
+          <input
+          	class="textInput"
+            name="userName"     
+            type="text"
+            placeholder="Enter Name"
+            value=""
+            id="name"
+            required
+          />
+          <label for="psw"><b>Password</b></label>
+          <input
+            type="password"
+            placeholder="Enter Password"
+            name="psw"
+            id="psw"
+            value=""
+            required
+          />
+          <br>
+          <button type="submit" class="registerbtn" onclick="registerUser()">Register</button>
+          <!--TODO: Something needs to happen after user cliks Register-->
+          <label><b>Token: placeholder</b></label>
+        </center>
+    </form>
+</div>
+
+
+<!--Algorithms Page Content-->
+<!--TODO: There needs to be options for a user to enter text/descriptions to name the classification/algorithm..-->  
+<div id="Algorithms" class="tabcontent">
+    <div collapsible="true" collapsed-data="true">
+      <button type="button" data-icon="gear" data-iconpos="right" data-mini="true" data-inline="true" id="add">Add Classification</button>
+      <div data-role="collapsibleset" data-content-theme="a" data-iconpos="right" id="set">
+        <div data-role="collapsible" id="set1" data-collapsed="false" hidden="true">
+            <button id="removeStyle" data-role="button" data-mini="true" data-theme="b" class="removeStyleBtn" onclick="removeAlgorithm()">Remove</button>
+            <!--TODO: The Add Algorithm button still needs functionality to continue the hierarchy-->  
+             <button id="addStyle" data-role="button" data-mini="true" data-theme="b" class="addStyleBtn" onclick="addAlgorithm()">Add Algorithm</button>
+            <!--TODO: Once the Add Algorithm works there needs to be Remove Algorithm and Add Implementation, then Remove Implementation-->  
+        </div>
+      </div>
+    </div>
+</div>
+
+<script>
+
+function openLink(evt, linkName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(linkName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+document.getElementById("defaultOpen").click();
+
+/*Below is JS for the Classification-Algorithm-Implementation Hierarchy page*/
+console.log("DOM Load");
+$( document ).on( "pagecreate", function() {
+	var nextId = 0;
+	$("#add").click(function() {
+	nextId++;
+      var content = "";
+	content += "<div data-role='collapsible' id='set" + nextId + "'>";
+    content += "<p>User description of classification would go here</p>";
+    content += "<h3>Classification Placeholder " + nextId + "</h3>";
+    content += "<button id='removeStyle" + nextId + "' class='removeStyleBtn ui-btn ui-btn-b ui-shadow ui-corner-all ui-mini'>Remove Classification</button>";
+    content += "<button id='addStyle" + nextId + "' class='addStyleBtn ui-btn ui-btn-b ui-shadow ui-corner-all ui-mini'>Add Algorithm</button></div>";
+
+    $( "#set" ).append( content ).collapsibleset( "refresh" );
+    $("#set" + nextId).collapsible( "expand" );
+    console.log("collapsible set " + nextId + " added !!!");
+  });
+		
+});
+$(document).on("click",".removeStyleBtn",function() {
+    $(this).closest('div[data-role="collapsible"]').remove();
+});
+</script>
+   
+</body>
+</html> 
