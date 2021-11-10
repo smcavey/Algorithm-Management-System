@@ -17,6 +17,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import db.ClassificationsDAO;
+import db.UsersDAO;
 import http.GetClassificationsResponse;
 import model.Classification;
 

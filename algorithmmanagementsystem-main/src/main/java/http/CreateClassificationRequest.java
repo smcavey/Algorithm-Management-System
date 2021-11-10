@@ -4,18 +4,22 @@ public class CreateClassificationRequest {
 	
 	public String name;
 	public String description;
-	public boolean system;
+	public String token;
 	
 	public String getName( ) { return name; }
 	public void setName(String name) { this.name = name; }
 	
-	public boolean getSystem() { return system; }
-	public void setSystem(boolean system) { this.system = system; }
-	
 	public String getDescription() { return description; }
 	public void setDescription(String description) { this.description = description; }
 	
+	public String getToken() { return token; }
+	public void setToken(String token) { this.token = token; }
+	
 	public CreateClassificationRequest() {
+	}
+	
+	public CreateClassificationRequest(String name) {
+		this.name = name;
 	}
 	
 	public CreateClassificationRequest (String name, String description) {
@@ -23,14 +27,14 @@ public class CreateClassificationRequest {
 		this.description = description;
 	}
 	
-	public CreateClassificationRequest (String name, String description, boolean system) {
+	public CreateClassificationRequest (String name, String description, String token) {
 		this.name = name;
 		this.description = description;
-		this.system = system;
+		this.token = token;
 	}
 	
 	public String toString() {
-		return "CreateClassification(" + name + ", " + description + ")";
+		return "CreateClassification(" + name + ", " + description + ", " + token + ")";
 	}
 
 }

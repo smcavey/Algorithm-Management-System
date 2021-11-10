@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 
 import org.junit.Assert;
@@ -24,20 +22,11 @@ public class CreateUserControllerTest extends LambdaTest {
         Assert.assertEquals(outgoing, response.response);
         Assert.assertEquals(200, response.httpCode);
     }
-	
-    /*void testFailInput(String incoming, String outgoing) throws IOException {
-    	CalculatorHandler handler = new CalculatorHandler();
-    	AddRequest req = new Gson().fromJson(incoming, AddRequest.class);
-
-    	AddResponse response = handler.handleRequest(req, createContext("compute"));
-
-        Assert.assertEquals(400, response.statusCode);
-    }*/
     
     @Test
     public void testCalculatorSimple() {
-    	String SAMPLE_INPUT_STRING = "{\"username\": \"testUser2\", \"password\": \"testPass\"}";
-        String RESULT = "testUser2";
+    	String SAMPLE_INPUT_STRING = "{\"username\": \"testToken\", \"password\": \"token\"}";
+        String RESULT = "testToken";
         
         try {
         	testInput(SAMPLE_INPUT_STRING, RESULT);

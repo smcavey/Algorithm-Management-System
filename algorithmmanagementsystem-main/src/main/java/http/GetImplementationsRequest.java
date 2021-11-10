@@ -1,19 +1,19 @@
 package http;
 
-public class GetAlgorithmRequest {
+public class GetImplementationsRequest {
 	public String name;
 	
 	public String getName( ) { return name; }
 	public void setName(String name) { this.name = name; }
 
-	public GetAlgorithmRequest() {
+	public GetImplementationsRequest() {
 	}
 	
-	public GetAlgorithmRequest (String name) {
+	public GetImplementationsRequest (String name) {
 		this.name = name;
 	}
 	
 	public String toString() {
-		return "Algorithm(" + name + ")";
+		return "Implementations(" + name + ")";
 	}
 }

@@ -118,5 +118,18 @@ public class ClassificationsDAO {
         }
     }
 
-    
+    public boolean deleteClassification(Classification classification) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE name = ?;");
+            ps.setString(1, classification.name);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete classification: " + e.getMessage());
+        }
+    }
+ 
 }

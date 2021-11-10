@@ -20,7 +20,7 @@ public class LoginController implements RequestHandler<LoginRequest, LoginRespon
 	
 	LambdaLogger logger;
 
-	boolean loginUser(String username, String password) throws Exception { 
+	String loginUser(String username, String password) throws Exception { 
 		if (logger != null) { logger.log("in createUser"); }
 		UsersDAO dao = new UsersDAO();
 
@@ -29,7 +29,7 @@ public class LoginController implements RequestHandler<LoginRequest, LoginRespon
 		if (exist != null) {
 			return dao.loginUser(username, password);
 		} else {
-			return false;
+			throw new Exception("Failed to login user: user " + username + " does not exist");
 		}
 	}
 	
@@ -38,13 +38,14 @@ public class LoginController implements RequestHandler<LoginRequest, LoginRespon
     	
     	LoginResponse response;
     	try {
-			if (loginUser(req.username, req.password)) {
-				response = new LoginResponse(req.username, "goodtoken");
+    		String token = loginUser(req.username, req.password);
+			if (loginUser(req.username, req.password) != null) {
+				response = new LoginResponse(req.username, token);
 			} else {
-				response = new LoginResponse(req.username, "invalidtoken", 400);
+				response = new LoginResponse("Unable to login user: " + req.username, "", 400);
 			}
 		} catch (Exception e) {
-			response = new LoginResponse("Unable to login user: " + req.username + "(" + e.getMessage() + ")", "invalidtoken", 400);
+			response = new LoginResponse("Unable to login user: " + req.username + "(" + e.getMessage() + ")", "", 400);
 		}
 
 		return response;

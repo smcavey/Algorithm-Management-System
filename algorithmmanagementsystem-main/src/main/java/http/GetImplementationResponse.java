@@ -1,29 +1,25 @@
 package http;
 
+import model.Implementation;
+
 public class GetImplementationResponse {
-	public final String response;
+	public final Implementation implementation;
 	public final int httpCode;
-	public String sourceCode;
+	public final String error;
 	
-	public GetImplementationResponse (String s, String sourceCode, int code) {
-		this.response = s;
-		this.sourceCode = sourceCode;
+	public GetImplementationResponse (Implementation implementation, int code) {
+		this.implementation = implementation;
 		this.httpCode = code;
+		this.error = "";
 	}
-	
-	// 200 means successful login
-	public GetImplementationResponse (String s, String sourceCode) {
-		this.response = s;
-		this.sourceCode = s;
-		this.httpCode = 200;
-	}
-	
-	public GetImplementationResponse(String s, int code) {
-		this.response = s;
+
+	public GetImplementationResponse (int code, String errorMessage) {
+		this.implementation = null; // doesn't matter since error
 		this.httpCode = code;
+		this.error = errorMessage;
 	}
 	
 	public String toString() {
-		return "Response(" + response + ")";
+		return "Response(" + implementation.fileName + ")";
 	}
 }

@@ -38,13 +38,14 @@ public class CreateImplementationController implements RequestHandler<CreateImpl
 	 * 
 	 * @throws Exception 
 	 */
-	boolean createImplementation(String fileContent, String fileName, String description) throws Exception { 
+	boolean createImplementation(String fileName, String description, String algorithm, String fileContent) throws Exception { 
 		if (logger != null) { logger.log("in createImplementation"); }
 		ImplementationsDAO dao = new ImplementationsDAO();
 		
 		// check if present
 		Implementation exist = dao.getImplementation(fileName);
-		Implementation implementation = new Implementation (fileContent, fileName, description);
+		Implementation implementation = new Implementation (fileName, description, algorithm);
+		implementation.setFileContent(fileContent);
 		if (exist == null) {
 			return dao.createImplementation(implementation);
 		} else {
@@ -92,7 +93,7 @@ public class CreateImplementationController implements RequestHandler<CreateImpl
 				} else {
 					response = new CreateImplementationResponse(req.fileName, 422);
 				}
-				if (createImplementation(req.fileContent, req.fileName, req.description)) {
+				if (createImplementation(req.fileName, req.description, req.algorithm, req.fileContent)) {
 					response = new CreateImplementationResponse(req.fileName);
 				} else {
 					response = new CreateImplementationResponse(req.fileName, 422);

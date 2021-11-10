@@ -30,14 +30,9 @@ public class CreateAlgorithmController implements RequestHandler<CreateAlgorithm
 	LambdaLogger logger;
 
     private AmazonS3 s3 = null;
-
-    // Test purpose only.
-    /*CreateClassificationController(AmazonS3 s3) {
-        this.s3 = s3;
-    }*/
     
 	boolean createAlgorithm(String name, String description, String classification) throws Exception { 
-		if (logger != null) { logger.log("in createUser"); }
+		if (logger != null) { logger.log("in createAlgorithm"); }
 		AlgorithmsDAO dao = new AlgorithmsDAO();
 
 		// check if present

@@ -27,7 +27,7 @@ public class CreateImplementationControllerTest extends LambdaTest {
     
     @Test
     public void testCreateImplementationSimple() {
-        String SAMPLE_INPUT_STRING = "{\"fileName\": \"HelloWorld.java\","
+        String SAMPLE_INPUT_STRING = "{\"fileName\": \"HelloWorld3.java\", \"algorithm\": \"testAlgorithm\", \"description\": \"test description\","
                 + " \"fileContent\": "
                 + "\"LyogVGhpcyBpcyBhIHNpbXBsZSBKYXZhIHByb2dyYW0uCiAgIEZpbGVOYW1lIDogIkhlbGx"
                 + "vV29ybGQuamF2YSIuICovCmNsYXNzIEhlbGxvV29ybGQKewogICAgLy8gWW91ciBwcm9ncmFt"
@@ -35,7 +35,7 @@ public class CreateImplementationControllerTest extends LambdaTest {
                 + "3JsZCIgdG8gdGhlIHRlcm1pbmFsIHdpbmRvdy4KICAgIHB1YmxpYyBzdGF0aWMgdm9pZCBtYW"
                 + "luKFN0cmluZyBhcmdzW10pCiAgICB7CiAgICAgICAgU3lzdGVtLm91dC5wcmludGxuKCJIZWx"
                 + "sbywgV29ybGQiKTsKICAgIH0KfQ==\"}";
-        String RESULT = "testClassificationName2";
+        String RESULT = "HelloWorld3.java";
         
         try {
         	testInput(SAMPLE_INPUT_STRING, RESULT);

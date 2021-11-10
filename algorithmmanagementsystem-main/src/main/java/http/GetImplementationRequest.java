@@ -1,19 +1,19 @@
 package http;
 
 public class GetImplementationRequest {
-	public String name;
+	public String fileName;
 	
-	public String getName( ) { return name; }
-	public void setName(String name) { this.name = name; }
+	public String getFileName( ) { return fileName; }
+	public void setFileName(String fileName) { this.fileName = fileName; }
 
 	public GetImplementationRequest() {
 	}
 	
-	public GetImplementationRequest (String name) {
-		this.name = name;
+	public GetImplementationRequest (String fileName) {
+		this.fileName = fileName;
 	}
 	
 	public String toString() {
-		return "Implementation(" + name + ")";
+		return "Implementation(" + fileName + ")";
 	}
 }

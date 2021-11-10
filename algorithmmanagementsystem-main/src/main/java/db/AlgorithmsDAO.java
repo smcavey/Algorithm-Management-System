@@ -37,7 +37,7 @@ public class AlgorithmsDAO {
             ps = conn.prepareStatement("INSERT INTO " + tblName + " (name,description,classification) values(?,?,?);");
             ps.setString(1, algorithm.name);
             ps.setString( 2, algorithm.description);
-            ps.setNString(3,  algorithm.classification);
+            ps.setNString(3, algorithm.classification);
             ps.execute();
             return true;
 
@@ -96,6 +96,28 @@ public class AlgorithmsDAO {
 
         } catch (Exception e) {
             throw new Exception("Failed to get algorithm: " + e.getMessage());
+        }
+    }
+	
+    public List<Algorithm> getAllAlgorithms(String name) throws Exception {
+        
+        List<Algorithm> allAlgorithms = new ArrayList<>();
+        try {
+            Statement statement = conn.createStatement();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE classification = ?;");
+            ps.setString(1, name);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Algorithm a = generateAlgorithm(resultSet);
+                allAlgorithms.add(a);
+            }
+            resultSet.close();
+            statement.close();
+            return allAlgorithms;
+
+        } catch (Exception e) {
+            throw new Exception("Failed in getting algorithms: " + e.getMessage());
         }
     }
 

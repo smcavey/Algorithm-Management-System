@@ -1,42 +1,44 @@
 package com.amazonaws.lambda.demo;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.S3Event;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 
-public class DeleteClassificationController implements RequestHandler<S3Event, String> {
+import db.ClassificationsDAO;
+import http.DeleteClassificationRequest;
+import http.DeleteClassificationResponse;
+import model.Classification;
 
-    private AmazonS3 s3 = AmazonS3ClientBuilder.standard().build();
+/**
+ * No more JSON parsing
+ */
+public class DeleteClassificationController implements RequestHandler<DeleteClassificationRequest,DeleteClassificationResponse> {
 
-    public DeleteClassificationController() {}
+	public LambdaLogger logger = null;
 
-    // Test purpose only.
-    DeleteClassificationController(AmazonS3 s3) {
-        this.s3 = s3;
-    }
+	@Override
+	public DeleteClassificationResponse handleRequest(DeleteClassificationRequest req, Context context) {
+		logger = context.getLogger();
+		logger.log("Loading Java Lambda handler to delete");
 
-    @Override
-    public String handleRequest(S3Event event, Context context) {
-        context.getLogger().log("Received event: " + event);
+		DeleteClassificationResponse response = null;
+		logger.log(req.toString());
 
-        // Get the object from the event and show its content type
-        String bucket = event.getRecords().get(0).getS3().getBucket().getName();
-        String key = event.getRecords().get(0).getS3().getObject().getKey();
-        try {
-            S3Object response = s3.getObject(new GetObjectRequest(bucket, key));
-            String contentType = response.getObjectMetadata().getContentType();
-            context.getLogger().log("CONTENT TYPE: " + contentType);
-            return contentType;
-        } catch (Exception e) {
-            e.printStackTrace();
-            context.getLogger().log(String.format(
-                "Error getting object %s from bucket %s. Make sure they exist and"
-                + " your bucket is in the same region as this function.", key, bucket));
-            throw e;
-        }
-    }
+		ClassificationsDAO dao = new ClassificationsDAO();
+		
+		// See how awkward it is to call delete with an object, when you only
+		// have one part of its information?
+		Classification classification = new Classification(req.name, "");
+		try {
+			if (dao.deleteClassification(classification)) {
+				response = new DeleteClassificationResponse(req.name, 200);
+			} else {
+				response = new DeleteClassificationResponse(req.name, 422, "Unable to delete classification.");
+			}
+		} catch (Exception e) {
+			response = new DeleteClassificationResponse(req.name, 403, "Unable to delete classification: " + req.name + "(" + e.getMessage() + ")");
+		}
+
+		return response;
+	}
 }

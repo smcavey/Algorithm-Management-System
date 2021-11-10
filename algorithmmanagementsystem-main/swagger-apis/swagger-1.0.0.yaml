@@ -33,7 +33,7 @@ paths:
         400:
           description:  failed to return users
   /getUser:
-    get:
+    post:
       produces:
       - application/json
       responses:
@@ -148,7 +148,7 @@ paths:
         400:
           description: classification deletion failed
   /getAlgorithm:
-    get:
+    post:
       produces:
       - application/json
       responses:
@@ -159,7 +159,7 @@ paths:
         400:
           description: algorithm retrieval failed
   /reclassifyAlgorithm:
-    get:
+    post:
       produces:
       - application/json
       responses:
@@ -207,7 +207,7 @@ paths:
         400:
           description: algorithm deletion failed
   /getProblemInstance:
-    get:
+    post:
       produces:
       - application/json
       responses:
@@ -255,7 +255,7 @@ paths:
         400:
           description: problem instance deletion failed
   /getImplementation:
-    get:
+    post:
       produces:
       - application/json
       responses:
@@ -303,7 +303,7 @@ paths:
         400:
           description: implementation deletion failed
   /getBenchmark:
-    get:
+    post:
       produces:
       - application/json
       responses:
@@ -354,12 +354,12 @@ definitions:
   Classification:
     type: object
     required:
-    - classificationID
+    - name
     - description
     - token
     properties:
-      classificationID:
-        type: integer
+      name:
+        type: string
       description:
         type: string
       token:
@@ -373,52 +373,53 @@ definitions:
     properties:
 #      classificationID:
 #        type: integer
-      classificationID:
-        type: integer
+      classificationName:
+        type: string
       token:
         type: string
   Algorithm:
     type: object
     required:
-    - algorithmID
+    - name
     - description
-    - classificationID
+    - classificationName
     - token
     properties:
-      algorithmID:
-        type: integer
+      name:
+        type: string
       description:
         type: string
       token:
         type: string
-      classificationID:
-        type: integer
+      classificationName:
+        type: string
   ProblemInstance:
     type: object
     required:
-    - problemInstanceID
+    - name
     - description
     - token
-    - algorithmID
+    - algorithmName
     properties:
-      problemInstanceID:
-        type: integer
+      name:
+        type: string
       description:
         type: string
       token:
         type: string
-      algorithmID:
-        type: integer
+      algorithmName:
+        type: string
   Implementation:
     type: object
     required:
-    - implementationID
-    - file
+    - fileName
+    - description
+    - filePath
     - token
-    - algorithmID
+    - algorithm
     properties:
-      implementationID:
-        type: integer
+      name:
+        type: string
       file:
         type: string
         format: binary
@@ -429,8 +430,7 @@ definitions:
   Benchmark:
     type: object
     required:
-    - benchmarkID
-    - runDate
+    - name
     - l1cache
     - l2cache
     - l3cache
@@ -438,11 +438,9 @@ definitions:
     - cores
     - threads
     - cpuManufacturer
-    - implementationID
+    - implementationName
     properties:
-      benchmarkID:
-        type: integer
-      runDate:
+      name:
         type: string
       l1cache:
         type: string
@@ -458,8 +456,8 @@ definitions:
         type: integer
       cpuManufacturer:
         type: string
-      implementationID:
-        type: integer
+      implementationName:
+        type: string
   Users:
    type: array
    items:
@@ -491,50 +489,50 @@ definitions:
   DeleteClassification:
     type: object
     required:
-    - classificationID
+    - classificationName
     - token
     properties:
-      classificationID:
+      classificationName:
         type: string
       token:
         type: string
   DeleteAlgorithm:
     type: object
     required:
-    - algorithmID
+    - algorithmName
     - token
     properties:
-      algorithmID:
+      algorithmName:
         type: string
       token:
         type: string
   DeleteProblemInstance:
     type: object
     required:
-    - problemInstanceID
+    - problemInstanceName
     - token
     properties:
-      problemInstanceID:
+      problemInstanceName:
         type: string
       token:
         type: string
   DeleteBenchmark:
     type: object
     required:
-    - benchmarkID
+    - benchmarkName
     - token
     properties:
-      benchmarkID:
+      benchmarkName:
         type: string
       token:
         type: string
   DeleteImplementation:
     type: object
     required:
-    - implementationID
+    - implementationName
     - token
     properties:
-      implementationID:
+      implementationName:
         type: string
       token:
         type: string

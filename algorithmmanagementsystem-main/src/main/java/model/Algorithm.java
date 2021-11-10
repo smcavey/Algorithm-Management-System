@@ -11,5 +11,9 @@ public class Algorithm {
 		this.description = description;
 		this.classification = classification;
 	}
+	
+	public String toString() {
+		return ("Name: " + name + " Description: " + description + "Classification: " + classification);
+	}
 
 }

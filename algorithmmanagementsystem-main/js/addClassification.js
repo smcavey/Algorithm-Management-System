@@ -1,20 +1,17 @@
-function processRegisterResponse(result) {
+function processAddClassificationResponse(result) {
 	
 	console.log("response: " + result);
 	
-	//we may need a refreshUserList() --> This might be written when we get all users for admin capabilities
-	
+	refreshClassificationList();
+	location.reload();	
 }
 
 
-function registerUser() {
-	console.log("testing register user here!")
-	var username = document.getElementById("name").value;
-	console.log(username);
+function createClassification() {
+	console.log("testing add classification here!")
+	var classificationName = document.getElementById("classificationName").value;	
 	
-	
-	var pw = document.getElementById("psw").value;
-	console.log(pw);
+	var classificationDesc = document.getElementById("classificationDesc").value;
 	
 	
 	//Should we take in the username and then generate the hash here and salt?
@@ -23,13 +20,13 @@ function registerUser() {
 	var data = {};
 	
 	//not sur why this is throwing errors...could be because it doesn't know format of JSON yet defined in API
-	data["username"] = username;
-	data["password"] = pw;
+	data["name"] = classificationName;
+	data["description"] = classificationDesc;
 	
 	var js = JSON.stringify(data);
-	console.log("JS:" + js);
+	console.log("JS in classification:" + js);
 	var xhr = new XMLHttpRequest();
- 	xhr.open("POST", registerURL, true);
+ 	xhr.open("POST", addClassificationURL, true);
 
   	// send the collected data as JSON
   	xhr.send(js);
@@ -41,7 +38,7 @@ function registerUser() {
     	if (xhr.readyState == XMLHttpRequest.DONE) {
     		if (xhr.status == 200) {
 	      		console.log ("XHR:" + xhr.responseText);
-	      		processRegisterResponse(xhr.responseText);
+	      		processAddClassificationResponse(xhr.responseText);
     	 	} else {
     			console.log("actual:" + xhr.responseText)
 			  	var js = JSON.parse(xhr.responseText);
@@ -49,7 +46,11 @@ function registerUser() {
 			  	alert (err);
     	 	}
     	} else {
-      		processCreateResponse("N/A");
+      		processAddClassificationResponse("N/A");
     	}
   	};
+
+	closeClassificationForm();
+	refreshClassificationList();
+
 }

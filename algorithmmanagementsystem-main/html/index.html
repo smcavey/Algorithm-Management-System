@@ -1,110 +1,44 @@
 <!DOCTYPE html>
-<html><head>
-
+<html>
+<head>
 <meta charset="utf-8" />
-
-<!-- Load JS File Scripts -->
-<script type='text/javascript' src='../js/api.js'></script>
-<script type="text/javascript" src="../js/registerUser.js"></script>
-<script type="text/javascript" src="../js/addAlgorithm.js"></script>
-
-<!-- Title area -->
-<title>Algorithm Managment System</title>
-<h1><center>Algorithm Management System</center></h1>
-<!-- Load icon/style/script libraries -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="https://code.jquery.com/mobile/git/jquery.mobile-git.js"></script>
-<link href="https://code.jquery.com/mobile/git/jquery.mobile-git.css" rel="stylesheet" type="text/css" />
-<meta name="viewport" content="width=device-width, user-scalable=no" />
-
+    <!-- Load JS File Scripts -->
+    <script type='text/javascript' src='../js/api.js'></script>
+    <script type="text/javascript" src="../js/registerUser.js"></script>
+    <script type="text/javascript" src='../js/addClassification.js'></script>
+    <script type="text/javascript" src="../js/listAllClassifications.js"></script>
+    <script type="text/javascript" src="../js/addAlgorithm.js"></script>
+    <script type="text/javascript" src="../js/listAllAlgorithms.js"></script>
+    <script type="text/javascript" src="../js/addImplementation.js"></script>
+    <script type="text/javascript" src="../js/listAllImplementations.js"></script>
+    
+ 	
+    
+    <!-- Title area -->
+    <title>Algorithm Managment System</title>
+    <h1><center>Algorithm Management System</center></h1>
+    
 <style>
-h1 {
-  color: black;
-  font-family: 'Times New Roman', Times, serif;
+.form-popup {
+   display: none;
+   position: fixed;
+   border:3px solid #f1f1f1;
+   z-index: 9;
+   background: white;
 }
-label {
-  display: inline-block;
-  width: 300px;
-  text-align: center;
-  font-family: 'Times New Roman', Times, serif;
-}
-#Register button{
-  font-family: 'Times New Roman', Times, serif;
-}
-/* Style the tab */
-.tab {
-  position: relative;
-  overflow: hidden;
-  background-color: #333;
-}
-/* Style the buttons inside the tab */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-  font-weight: normal;
-  color: white;
-  font-family: 'Times New Roman', Times, serif;
-}
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-  color: black;
-}
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #04AA6D;
-  color: white;
-}
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 120px;
-  border: 1px solid #ccc;
-  border-top: none;
-  font-family: 'Times New Roman', Times, serif;
-}
-#Register {
-  display: none;
-  padding: 0px 600px;
-  border: 1px solid #ccc;
-  border-top: none;
-  }
-.topnav-right {
-  float: right;
-}
-.topnav-left {
-  float: left;
-}
+
 </style>
-
 </head>
+
 <body>
-<div class="tab">
-  <div class="topnav-left">
-    <button class="tablinks" onclick="openLink(event, 'Algorithms')"><i class="fa fa-fw fa-home"></i>Algorithms</button>
-  </div>
-  <div class="topnav-right">
-    <button class="tablinks"  onclick="openLink(event, 'Register')" id="defaultOpen"><i class="fa fa-fw fa-user"></i>Register</button>
-  </div>
-</div>
-
-
-<!--Register Page Content-->
-<div id="Register" class="tabcontent">
-	<form action="register" method="post">
+    <div>
+        <form>
         <h2><center>Register Account</center></h2>
         <hr />
         <center>
           <label for="name"><b>Name</b></label>
           <input
-          	class="textInput"
+            class="textInput"
             name="userName"     
             type="text"
             placeholder="Enter Name"
@@ -121,71 +55,203 @@ label {
             value=""
             required
           />
-          <br>
+          <br></br>
           <button type="submit" class="registerbtn" onclick="registerUser()">Register</button>
-          <!--TODO: Something needs to happen after user cliks Register-->
+          <br></br>
           <label><b>Token: placeholder</b></label>
         </center>
-    </form>
-</div>
-
-
-<!--Algorithms Page Content-->
-<!--TODO: There needs to be options for a user to enter text/descriptions to name the classification/algorithm..-->  
-<div id="Algorithms" class="tabcontent">
-    <div collapsible="true" collapsed-data="true">
-      <button type="button" data-icon="gear" data-iconpos="right" data-mini="true" data-inline="true" id="add">Add Classification</button>
-      <div data-role="collapsibleset" data-content-theme="a" data-iconpos="right" id="set">
-        <div data-role="collapsible" id="set1" data-collapsed="false" hidden="true">
-            <button id="removeStyle" data-role="button" data-mini="true" data-theme="b" class="removeStyleBtn" onclick="removeAlgorithm()">Remove</button>
-            <!--TODO: The Add Algorithm button still needs functionality to continue the hierarchy-->  
-             <button id="addStyle" data-role="button" data-mini="true" data-theme="b" class="addStyleBtn" onclick="addAlgorithm()">Add Algorithm</button>
-            <!--TODO: Once the Add Algorithm works there needs to be Remove Algorithm and Add Implementation, then Remove Implementation-->  
-        </div>
-      </div>
+      </form>
     </div>
-</div>
+
+    <br></br>
+    <button type="button" id="addClassificaton" onclick="showClassificationForm()">Add Classification</button>
+    <button type="button" id="addAlgorithm" onclick="showAlgorithmForm()">Add Algorithm</button>
+    <button type="button" id="addImplementation" onclick="showImplementationForm()">Add Implementation</button>
+    <!--not yet functional-->
+    <button type="button" id="addProblemInstance" >Add Problem Instance</button>
+
+    <div class="form-popup" id="classificationForm">
+        <form class="form-container">
+          <h2><center>Describe Classification</center></h2>
+          <center>
+            <label for="classificationName"><b>Name</b></label>
+            <input
+              class="textInput"
+              name="classificationName"     
+              type="text"
+              placeholder="Classification Name"
+              value=""
+              id="classificationName"
+              required
+            />
+            <label for="classificationDesc"><b>Description</b></label>
+            <input
+              type="text"
+              placeholder="Classification Description"
+              name="classificationDesc"
+              id="classificationDesc"
+              value=""
+              required
+            />      
+            <br></br>
+            <button type="submit" id="addClassification" onclick="createClassification()" >Submit</button>
+            <button type="button" class="cancelClassificationbtn" onclick="closeClassificationForm()">Close</button>
+          </center>
+        </form>
+      </div>
+
+      <div class="form-popup" id="algorithmForm">
+        <form class="form-container">
+          <h2><center>Describe Algorithm</center></h2>
+          <center>
+            <label for="a_classificationName"><b>Classification Name</b></label>
+            <input
+                class="textInput"
+              name="a_classificationName"     
+              type="text"
+              placeholder="Classification Name"
+              value=""
+              id="a_classificationName"
+              required
+            />
+            <label for="algorithmName"><b> Algorithm Name</b></label>
+            <input
+                class="textInput"
+              name="algorithmName"     
+              type="text"
+              placeholder="Algorithm Name"
+              value=""
+              id="algorithmName"
+              required
+            />
+            <label for="algorithmDesc"><b>Description</b></label>
+            <input
+              type="text"
+              placeholder="Algorithm Description"
+              name="algorithmDesc"
+              id="algorithmDesc"
+              value=""
+              required
+            />      
+            <br></br>
+            <button type="submit" id="addAlgorithm" onclick="createAlgorithm()" >Submit</button>
+            <button type="button" class="cancelAlgorithmbtn" onclick="closeAlgorithmForm()">Close</button>
+          </center>
+        </form>
+      </div>
+
+      <div class="form-popup" id="implementationForm">
+        <form class="form-container">
+            <h2><center>Describe Implementation</center></h2>
+            <center>
+            <label for="i_classificationName"><b>Classification Name</b></label>
+            <input
+              class="textInput"
+              name="i_classificationName"     
+              type="text"
+              placeholder="Classification Name"
+              value=""
+              id="i_classificationName"
+              required
+            />
+            <label for="i_algorithmName"><b> Algorithm Name</b></label>
+            <input
+                class="textInput"
+              name="i_algorithmName"     
+              type="text"
+              placeholder="Algorithm Name"
+              value=""
+              id="i_algorithmName"
+              required
+            />
+            <label for="ImplementationFileName"><b>Implementation File Name</b></label>
+            <input
+                class="textInput"
+                name="ImplementationFileName"     
+                type="text"
+                placeholder="Implementation File Name"
+                value=""
+                id="ImplementationFileName"
+                required
+            />
+            <label for="ImplementationDesc"><b>Description</b></label>
+            <input
+                type="text"
+                placeholder="Implementation Description"
+                name="ImplementationDesc"
+                id="ImplementationDesc"
+                value=""
+                required
+            />  
+            <br></br>  
+            <label for="ImplementationUpload"><b>Upload Implementation:</b></label>
+            <input 
+                type="file" 
+                id="ImplementationUpload" 
+                name="ImplementationUpload"
+                value="" 
+                required
+                onchange="getBase64(event)"
+                />  
+            <br></br>
+            <p id=sourceCode hidden></p>
+            <button type="submit" id="addImplementation" onclick="createImplementation(sourceCode.innerHTML)">Submit</button>
+            <button type="button" class="cancelImplementationbtn" onclick="closeImplementationForm()">Close</button>
+            </center>
+        </form>
+      </div>
+      
+      <div id="classificationList"></div>
+      
+</body>
+
+<script type="text/javascript">
+ 	
+ 		document.addEventListener("DOMContentLoaded", function() {
+ 			
+ 			function initialize() {
+ 				refreshClassificationList();
+ 			}
+ 			
+ 			initialize();
+ 			
+ 		});
+ 	
+</script>
 
 <script>
 
-function openLink(evt, linkName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(linkName).style.display = "block";
-  evt.currentTarget.className += " active";
+/*
+function getFileName(filename) {
+	document.getElementById("ImplementationUpload").value = filename;
+}*/
+
+function getBase64(event) {
+	  var selectedFile = event.target.files[0];
+	  var reader = new FileReader();
+	  reader.readAsDataURL(selectedFile);
+	  reader.onload = function(event) {
+	  	document.getElementById("sourceCode").innerHTML = event.target.result.split(',')[1];
+	  };
 }
-document.getElementById("defaultOpen").click();
 
-/*Below is JS for the Classification-Algorithm-Implementation Hierarchy page*/
-console.log("DOM Load");
-$( document ).on( "pagecreate", function() {
-	var nextId = 0;
-	$("#add").click(function() {
-	nextId++;
-      var content = "";
-	content += "<div data-role='collapsible' id='set" + nextId + "'>";
-    content += "<p>User description of classification would go here</p>";
-    content += "<h3>Classification Placeholder " + nextId + "</h3>";
-    content += "<button id='removeStyle" + nextId + "' class='removeStyleBtn ui-btn ui-btn-b ui-shadow ui-corner-all ui-mini'>Remove Classification</button>";
-    content += "<button id='addStyle" + nextId + "' class='addStyleBtn ui-btn ui-btn-b ui-shadow ui-corner-all ui-mini'>Add Algorithm</button></div>";
-
-    $( "#set" ).append( content ).collapsibleset( "refresh" );
-    $("#set" + nextId).collapsible( "expand" );
-    console.log("collapsible set " + nextId + " added !!!");
-  });
-		
-});
-$(document).on("click",".removeStyleBtn",function() {
-    $(this).closest('div[data-role="collapsible"]').remove();
-});
+function showClassificationForm() {
+	document.getElementById("classificationForm").style.display = "block";
+}
+function closeClassificationForm() {
+	document.getElementById("classificationForm").style.display = "none";
+}
+function showAlgorithmForm() {
+	document.getElementById("algorithmForm").style.display = "block";
+}
+function closeAlgorithmForm() {
+	document.getElementById("algorithmForm").style.display = "none";
+}
+function showImplementationForm() {
+	document.getElementById("implementationForm").style.display = "block";
+}
+function closeImplementationForm() {
+	document.getElementById("implementationForm").style.display = "none";
+}
 </script>
-   
-</body>
-</html> 
+</html>
