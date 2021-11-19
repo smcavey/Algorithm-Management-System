@@ -2,7 +2,8 @@ function processAddImplementationResponse(result) {
 	
 	console.log("response: " + result);
 	
-	location.reload();
+	refreshClassificationList();
+	//location.reload();
 	
 }
 function createImplementation(sourceCode) {
@@ -32,10 +33,12 @@ function createImplementation(sourceCode) {
 	var data = {};
 	
 	//not sur why this is throwing errors...could be because it doesn't know format of JSON yet defined in API
-	data["name"] = ImplementationName;
+	data["fileName"] = ImplementationName;
 	data["description"] = ImplementationDesc;
 	data["algorithm"] = i_algorithmName;
 	data["fileContent"] = ImplementationUpload;
+	data["token"] = document.getElementById("token").innerHTML;
+
 	
 	var js = JSON.stringify(data);
 	console.log("JS in implementation:" + js);

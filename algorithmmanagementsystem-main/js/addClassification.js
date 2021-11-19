@@ -3,7 +3,6 @@ function processAddClassificationResponse(result) {
 	console.log("response: " + result);
 	
 	refreshClassificationList();
-	location.reload();	
 }
 
 
@@ -22,6 +21,8 @@ function createClassification() {
 	//not sur why this is throwing errors...could be because it doesn't know format of JSON yet defined in API
 	data["name"] = classificationName;
 	data["description"] = classificationDesc;
+	data["token"] = document.getElementById("token").innerHTML;
+	console.log(data["token"]);
 	
 	var js = JSON.stringify(data);
 	console.log("JS in classification:" + js);

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8" />
     <!-- Load JS File Scripts -->
     <script type='text/javascript' src='../js/api.js'></script>
     <script type="text/javascript" src="../js/registerUser.js"></script>
+    <script type="text/javascript" src="../js/loginUser.js"></script>
     <script type="text/javascript" src='../js/addClassification.js'></script>
     <script type="text/javascript" src="../js/listAllClassifications.js"></script>
     <script type="text/javascript" src="../js/addAlgorithm.js"></script>
@@ -19,6 +21,9 @@
     <h1><center>Algorithm Management System</center></h1>
     
 <style>
+* {
+  box-sizing: border-box;
+}
 .form-popup {
    display: none;
    position: fixed;
@@ -26,44 +31,87 @@
    z-index: 9;
    background: white;
 }
-
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 </style>
 </head>
 
 <body>
-    <div>
-        <form>
-        <h2><center>Register Account</center></h2>
-        <hr />
-        <center>
-          <label for="name"><b>Name</b></label>
-          <input
-            class="textInput"
-            name="userName"     
-            type="text"
-            placeholder="Enter Name"
-            value=""
-            id="name"
-            required
-          />
-          <label for="psw"><b>Password</b></label>
-          <input
-            type="password"
-            placeholder="Enter Password"
-            name="psw"
-            id="psw"
-            value=""
-            required
-          />
-          <br></br>
-          <button type="submit" class="registerbtn" onclick="registerUser()">Register</button>
-          <br></br>
-          <label><b>Token: placeholder</b></label>
-        </center>
-      </form>
+  <div class="row">
+    <div class="column">
+      <form>
+          <h2><center>Register</center></h2>
+          <hr />
+          <center>
+            <label for="name"><b>Username</b></label>
+            <input
+              class="textInput"
+              name="userName"     
+              type="text"
+              placeholder="Enter Username"
+              value=""
+              id="name"
+              required
+            />
+            <br></br>
+            <label for="psw"><b>Password</b></label>
+            <input
+              type="password"
+              placeholder="Enter Password"
+              name="psw"
+              id="psw"
+              value=""
+              required
+            />
+            <br></br>
+            <button type="button" class="registerbtn" onclick="registerUser()">Register</button>
+          </center>
+        </form>
     </div>
+    <div class="column">
+       <form>
+          <h2><center>Login</center></h2>
+          <hr />
+          <center>
+            <label for="loginName"><b>Username</b></label>
+            <input
+              class="textInput"
+              name="loginName"     
+              type="text"
+              placeholder="Enter Username"
+              value=""
+              id="loginName"
+              required
+            />
+            <br></br>
+            <label for="loginPSW"><b>Password</b></label>
+            <input
+              type="password"
+              placeholder="Enter Password"
+              name="loginPSW"
+              id="loginPSW"
+              value=""
+              required
+            />
+            <br></br>
+            <button type="button" id="loginUserButton" onclick="login()">Login</button>
+            <br></br>
+            <label id="token"><b>Token: </b></label>
+          </center>
+        </form>
+    </div>
+  </div>  
 
-    <br></br>
     <button type="button" id="addClassificaton" onclick="showClassificationForm()">Add Classification</button>
     <button type="button" id="addAlgorithm" onclick="showAlgorithmForm()">Add Algorithm</button>
     <button type="button" id="addImplementation" onclick="showImplementationForm()">Add Implementation</button>
@@ -94,7 +142,7 @@
               required
             />      
             <br></br>
-            <button type="submit" id="addClassification" onclick="createClassification()" >Submit</button>
+            <button type="button" id="addClassification" onclick="createClassification()" >Submit</button>
             <button type="button" class="cancelClassificationbtn" onclick="closeClassificationForm()">Close</button>
           </center>
         </form>
@@ -134,7 +182,7 @@
               required
             />      
             <br></br>
-            <button type="submit" id="addAlgorithm" onclick="createAlgorithm()" >Submit</button>
+            <button type="button" id="addAlgorithm" onclick="createAlgorithm()" >Submit</button>
             <button type="button" class="cancelAlgorithmbtn" onclick="closeAlgorithmForm()">Close</button>
           </center>
         </form>
@@ -195,7 +243,7 @@
                 />  
             <br></br>
             <p id=sourceCode hidden></p>
-            <button type="submit" id="addImplementation" onclick="createImplementation(sourceCode.innerHTML)">Submit</button>
+            <button type="button" id="addImplementation" onclick="createImplementation(sourceCode.innerHTML)">Submit</button>
             <button type="button" class="cancelImplementationbtn" onclick="closeImplementationForm()">Close</button>
             </center>
         </form>

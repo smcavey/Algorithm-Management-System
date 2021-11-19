@@ -7,6 +7,7 @@
 var baseURL = "https://bvc90rtxf1.execute-api.us-east-1.amazonaws.com/beta/"; //get your base URL
 
 var registerURL = baseURL + "createUser"; // POST for users
+var loginURL = baseURL + "loginUser"; // POST for users
 
 var addClassificationURL = baseURL + "createClassification"; // POST for classification
 var ListClassificationURL = baseURL + "getClassification"; // GET for classification

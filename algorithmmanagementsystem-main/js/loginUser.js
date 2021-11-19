@@ -1,22 +1,22 @@
-function processAddAlgorithmResponse(result) {
+function processLoginResponse(result) {
 	
 	console.log("response: " + result);
 	
-	refreshClassificationList();
-	//location.reload();
+	//we may need a refreshUserList() --> This might be written when we get all users for admin capabilities
+
+	
 	
 }
-function createAlgorithm() {
-	
-	console.log("testing add algorithm here!")
-	
-	var a_classificationName = document.getElementById("a_classificationName").value;
-	
-	var algorithmName = document.getElementById("algorithmName").value;
-	
-	var algorithmDesc = document.getElementById("algorithmDesc").value;
+
+
+function login() {
+	console.log("testing login user here!")
+	var username = document.getElementById("loginName").value;
+	console.log(username);
 	
 	
+	var pw = document.getElementById("loginPSW").value;
+	console.log(pw);
 	
 	
 	//Should we take in the username and then generate the hash here and salt?
@@ -25,18 +25,17 @@ function createAlgorithm() {
 	var data = {};
 	
 	//not sur why this is throwing errors...could be because it doesn't know format of JSON yet defined in API
-	data["classification"] = a_classificationName;
-	data["name"] = algorithmName;
-	data["description"] = algorithmDesc;
-	data["token"] = document.getElementById("token").innerHTML;
-
+	data["username"] = username;
+	data["password"] = pw;
+	
 	var js = JSON.stringify(data);
-	console.log("JS in algorithm:" + js);
+	console.log("JS:" + js);
 	var xhr = new XMLHttpRequest();
- 	xhr.open("POST", addAlgorithmURL, true);
+ 	xhr.open("POST", loginURL, true);
 
   	// send the collected data as JSON
   	xhr.send(js);
+
 
   	// This will process results and update HTML as appropriate. 
  	xhr.onloadend = function () {
@@ -45,7 +44,10 @@ function createAlgorithm() {
     	if (xhr.readyState == XMLHttpRequest.DONE) {
     		if (xhr.status == 200) {
 	      		console.log ("XHR:" + xhr.responseText);
-	      		processAddAlgorithmResponse(xhr.responseText);
+				var token = JSON.parse(xhr.responseText)["token"];
+				console.log("The TOKEN is....." + token);
+				document.getElementById("token").innerHTML = token;
+	      		processLoginResponse(xhr.responseText);
     	 	} else {
     			console.log("actual:" + xhr.responseText)
 			  	var js = JSON.parse(xhr.responseText);
@@ -53,9 +55,8 @@ function createAlgorithm() {
 			  	alert (err);
     	 	}
     	} else {
-      		processAddAlgorithmResponse("N/A");
+      		processLoginResponse("N/A");
     	}
   	};
 
-	closeAlgorithmForm();
 }
