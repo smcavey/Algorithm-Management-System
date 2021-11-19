@@ -1,42 +1,56 @@
 package com.amazonaws.lambda.demo;
 
+import java.util.List;
+
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.S3Event;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
+import com.google.gson.Gson;
 
-public class DeleteImplementationController implements RequestHandler<S3Event, String> {
+import db.BenchmarksDAO;
+import db.ImplementationsDAO;
+import http.DeleteBenchmarkRequest;
+import http.DeleteBenchmarkResponse;
+import http.DeleteImplementationRequest;
+import http.DeleteImplementationResponse;
+import http.GetBenchmarksRequest;
+import http.GetBenchmarksResponse;
+import model.Benchmark;
+import model.Implementation;
 
-    private AmazonS3 s3 = AmazonS3ClientBuilder.standard().build();
+public class DeleteImplementationController implements RequestHandler<DeleteImplementationRequest,DeleteImplementationResponse> {
 
-    public DeleteImplementationController() {}
+	public LambdaLogger logger = null;
 
-    // Test purpose only.
-    DeleteImplementationController(AmazonS3 s3) {
-        this.s3 = s3;
-    }
+	@Override
+	public DeleteImplementationResponse handleRequest(DeleteImplementationRequest req, Context context) {
+		logger = context.getLogger();
+		logger.log("Loading Java Lambda handler to delete");
 
-    @Override
-    public String handleRequest(S3Event event, Context context) {
-        context.getLogger().log("Received event: " + event);
+		DeleteImplementationResponse response = null;
+		logger.log(req.toString());
 
-        // Get the object from the event and show its content type
-        String bucket = event.getRecords().get(0).getS3().getBucket().getName();
-        String key = event.getRecords().get(0).getS3().getObject().getKey();
-        try {
-            S3Object response = s3.getObject(new GetObjectRequest(bucket, key));
-            String contentType = response.getObjectMetadata().getContentType();
-            context.getLogger().log("CONTENT TYPE: " + contentType);
-            return contentType;
-        } catch (Exception e) {
-            e.printStackTrace();
-            context.getLogger().log(String.format(
-                "Error getting object %s from bucket %s. Make sure they exist and"
-                + " your bucket is in the same region as this function.", key, bucket));
-            throw e;
-        }
-    }
+		ImplementationsDAO dao = new ImplementationsDAO();
+		BenchmarksDAO bdao = new BenchmarksDAO();
+
+		Implementation implementation = new Implementation(req.filename);
+		try {
+			if (dao.deleteImplementation(implementation)) {
+		        List<Benchmark> allBenchmarks = bdao.getAllBenchmarks(req.filename);
+		        if(!allBenchmarks.isEmpty()) {
+		        		for(Benchmark ben : allBenchmarks) {
+		        		//delete benchmarks
+		        		bdao.deleteBenchmarkGivenImplementation(ben);
+		        	}
+		        }
+				response = new DeleteImplementationResponse(req.filename, 200);
+			} else {
+				response = new DeleteImplementationResponse(req.filename, 422, "Unable to delete implementation.");
+			}
+		} catch (Exception e) {
+			response = new DeleteImplementationResponse(req.filename, 403, "Unable to delete implementation: " + req.filename + "(" + e.getMessage() + ")");
+		}
+
+		return response;
+	}
 }

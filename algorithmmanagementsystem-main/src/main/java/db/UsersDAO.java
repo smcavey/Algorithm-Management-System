@@ -139,20 +139,17 @@ public class UsersDAO {
             
             while (resultSet.next()) {
                 user = generateUser(resultSet);
+                validToken = true;
             }
             resultSet.close();
             ps.close();
-
-            validToken = true;
 
         } catch (Exception e) {
         	e.printStackTrace();
             throw new Exception("Failed in validating token: " + e.getMessage());
         }
-        
-        // FIXME: always return true (valid) for now, until frontend can implement token handling
-        return true;
-    	//return validToken;
+
+    	return validToken;
     }
 
     public String issueToken(String username) {

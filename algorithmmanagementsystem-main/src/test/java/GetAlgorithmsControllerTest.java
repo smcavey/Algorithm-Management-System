@@ -48,8 +48,8 @@ public class GetAlgorithmsControllerTest extends LambdaTest {
     
     @Test
     public void testGetAlgorithmSimple() {
-    	String SAMPLE_INPUT_STRING = "{\"name\": \"testClassificationName1\"}";
-        String RESULT = "testClassificationName1";
+    	String SAMPLE_INPUT_STRING = "{\"name\": \"Quick Sort\"}";
+        String RESULT = "Quick Sort";
         
         try {
         	testInput(SAMPLE_INPUT_STRING, RESULT);

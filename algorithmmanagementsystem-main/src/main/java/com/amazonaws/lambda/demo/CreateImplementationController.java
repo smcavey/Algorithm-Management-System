@@ -19,6 +19,8 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 
 import db.ImplementationsDAO;
+import db.UsersDAO;
+import http.CreateClassificationResponse;
 import http.CreateImplementationRequest;
 import http.CreateImplementationResponse;
 import model.Implementation;
@@ -88,16 +90,21 @@ public class CreateImplementationController implements RequestHandler<CreateImpl
 
 		CreateImplementationResponse response;
 		try {
-				if (createSystemImplementation(req.fileContent, req.fileName, req.description )) {
-					response = new CreateImplementationResponse(req.fileName);
-				} else {
-					response = new CreateImplementationResponse(req.fileName, 422);
-				}
-				if (createImplementation(req.fileName, req.description, req.algorithm, req.fileContent)) {
-					response = new CreateImplementationResponse(req.fileName);
-				} else {
-					response = new CreateImplementationResponse(req.fileName, 422);
-				}
+    		// check for valid token
+    		UsersDAO db = new UsersDAO();
+    		if (!db.validToken(req.token)) {
+    			return new CreateImplementationResponse("The token passed in (" + req.token + ") is not valid", 400);
+    		}
+			if (createSystemImplementation(req.fileContent, req.fileName, req.description )) {
+				response = new CreateImplementationResponse(req.fileName);
+			} else {
+				response = new CreateImplementationResponse(req.fileName, 422);
+			}
+			if (createImplementation(req.fileName, req.description, req.algorithm, req.fileContent)) {
+				response = new CreateImplementationResponse(req.fileName);
+			} else {
+				response = new CreateImplementationResponse(req.fileName, 422);
+			}
 		} catch (Exception e) {
 			response = new CreateImplementationResponse("Unable to create implementation: " + req.fileName + "(" + e.getMessage() + ")", 400);
 		}

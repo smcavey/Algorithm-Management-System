@@ -25,8 +25,8 @@ public class CreateAlgorithmControllerTest extends LambdaTest {
     
     @Test
     public void testCreateAlgorithmSimple() {
-    	String SAMPLE_INPUT_STRING = "{\"name\": \"testAlgorithm3\", \"description\": \"testAlgorithmDescription\", \"classification\": \"testClassificationName1\"}";
-        String RESULT = "testAlgorithm3";
+    	String SAMPLE_INPUT_STRING = "{\"name\": \"unitTestTest\", \"description\": \"testAlgorithmDescription\", \"classification\": \"Sorting\", \"token\": \"mtdll4k2cgflr3et82fgekdn3q\"}";
+        String RESULT = "unitTestTest";
         
         try {
         	testInput(SAMPLE_INPUT_STRING, RESULT);

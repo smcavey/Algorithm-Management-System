@@ -5,19 +5,19 @@ public class CreateAlgorithmRequest {
 	public String name;
 	public String description;
 	public String classification;
-	public boolean system;
+	public String token;
 	
 	public String getName( ) { return name; }
 	public void setName(String name) { this.name = name; }
-	
-	public boolean getSystem() { return system; }
-	public void setSystem(boolean system) { this.system = system; }
 	
 	public String getDescription() { return description; }
 	public void setDescription(String description) { this.description = description; }
 	
 	public String getClassification() { return classification; }
 	public void setClassification(String classification) { this.classification = classification; }
+	
+	public String getToken() { return token; }
+	public void settoken(String token) { this.token = token; }
 	
 	public CreateAlgorithmRequest() {
 	}
@@ -28,15 +28,15 @@ public class CreateAlgorithmRequest {
 		this.classification = classification;
 	}
 	
-	public CreateAlgorithmRequest (String name, String description, String classification, boolean system) {
+	public CreateAlgorithmRequest (String name, String description, String classification, String token) {
 		this.name = name;
 		this.description = description;
 		this.classification = classification;
-		this.system = system;
+		this.token = token;
 	}
 	
 	public String toString() {
-		return "CreateAlgortihm(" + name + ", " + description + "," + classification + ")";
+		return "CreateAlgortihm(" + name + ", " + description + ", " + classification + ", " + token + ")";
 	}
 
 }

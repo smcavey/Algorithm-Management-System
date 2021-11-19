@@ -28,7 +28,7 @@ public class GetImplementationsControllerTest extends LambdaTest {
         for (Implementation implementation : response.list) {
         	Assert.assertEquals(outgoing + "/" + implementation.fileName, implementation.filePath);
         }
-        Assert.assertEquals(200, response.statusCode);
+        Assert.assertEquals(200, response.httpCode);
     }
 
     @Test

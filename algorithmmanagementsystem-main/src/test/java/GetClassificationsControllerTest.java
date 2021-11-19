@@ -25,7 +25,7 @@ public class GetClassificationsControllerTest extends LambdaTest {
         	if (c.name.equals("testClassificationName2")) { hasTestClassificationName2 = true; }
         }
         Assert.assertTrue("testClassificationName2 needs to exist in the classifications table for this test case to work.", hasTestClassificationName2);
-        Assert.assertEquals(200, resp.statusCode);
+        Assert.assertEquals(200, resp.httpCode);
     }
 
 }

@@ -27,15 +27,15 @@ public class CreateImplementationControllerTest extends LambdaTest {
     
     @Test
     public void testCreateImplementationSimple() {
-        String SAMPLE_INPUT_STRING = "{\"fileName\": \"HelloWorld3.java\", \"algorithm\": \"testAlgorithm\", \"description\": \"test description\","
+        String SAMPLE_INPUT_STRING = "{\"filename\": \"garbage.java\", \"algorithm\": \"GCD\", \"description\": \"test description\","
                 + " \"fileContent\": "
                 + "\"LyogVGhpcyBpcyBhIHNpbXBsZSBKYXZhIHByb2dyYW0uCiAgIEZpbGVOYW1lIDogIkhlbGx"
                 + "vV29ybGQuamF2YSIuICovCmNsYXNzIEhlbGxvV29ybGQKewogICAgLy8gWW91ciBwcm9ncmFt"
                 + "IGJlZ2lucyB3aXRoIGEgY2FsbCB0byBtYWluKCkuCiAgICAvLyBQcmludHMgIkhlbGxvLCBXb"
                 + "3JsZCIgdG8gdGhlIHRlcm1pbmFsIHdpbmRvdy4KICAgIHB1YmxpYyBzdGF0aWMgdm9pZCBtYW"
                 + "luKFN0cmluZyBhcmdzW10pCiAgICB7CiAgICAgICAgU3lzdGVtLm91dC5wcmludGxuKCJIZWx"
-                + "sbywgV29ybGQiKTsKICAgIH0KfQ==\"}";
-        String RESULT = "HelloWorld3.java";
+                + "sbywgV29ybGQiKTsKICAgIH0KfQ==\", \"token\" : \"mtdll4k2cgflr3et82fgekdn3q\"}";
+        String RESULT = "garbage.java";
         
         try {
         	testInput(SAMPLE_INPUT_STRING, RESULT);

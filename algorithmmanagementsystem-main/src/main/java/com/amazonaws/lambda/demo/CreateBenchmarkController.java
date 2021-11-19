@@ -1,42 +1,58 @@
 package com.amazonaws.lambda.demo;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 
-public class CreateBenchmarkController implements RequestHandler<S3Event, String> {
+import db.BenchmarksDAO;
+import db.UsersDAO;
+import http.CreateBenchmarkRequest;
+import http.CreateBenchmarkResponse;
+import model.Benchmark;
 
-    private AmazonS3 s3 = AmazonS3ClientBuilder.standard().build();
+public class CreateBenchmarkController implements RequestHandler<CreateBenchmarkRequest, CreateBenchmarkResponse> {
 
-    public CreateBenchmarkController() {}
+	private static final String REAL_BUCKET = null;
 
-    // Test purpose only.
-    CreateBenchmarkController(AmazonS3 s3) {
-        this.s3 = s3;
-    }
+	LambdaLogger logger;
+
+    private AmazonS3 s3 = null;
+    
+	boolean createBenchmark(String name, String l1cache, String l2cache, String l3cache, String ram, int threads, int cores, String manufacturer, String implementation) throws Exception { 
+		if (logger != null) { logger.log("in createBenchmark"); }
+		BenchmarksDAO dao = new BenchmarksDAO();
+
+		// check if present
+		Benchmark exist = dao.getBenchmark(name);
+		if (exist == null) {
+			Benchmark benchmark = new Benchmark (name, l1cache, l2cache, l3cache, ram, threads, cores, manufacturer, implementation);
+			return dao.createBenchmark(benchmark);
+		} else {
+			return false;
+		}
+	}
 
     @Override
-    public String handleRequest(S3Event event, Context context) {
-        context.getLogger().log("Received event: " + event);
+    public CreateBenchmarkResponse handleRequest(CreateBenchmarkRequest req, Context context) {
+    	
+    	CreateBenchmarkResponse response;
+    	try {
+    		// check for valid token
+    		UsersDAO db = new UsersDAO();
+    		if (!db.validToken(req.token)) {
+    			return new CreateBenchmarkResponse("The token passed in (" + req.token + ") is not valid", 400);
+    		}
+    		
+			if (createBenchmark(req.name, req.l1cache, req.l2cache, req.l3cache, req.ram, req.threads, req.cores, req.manufacturer, req.implementation)) {
+				response = new CreateBenchmarkResponse(req.name);
+			} else {
+				response = new CreateBenchmarkResponse(req.name, 400);
+			}
+		} catch (Exception e) {
+			response = new CreateBenchmarkResponse("Unable to create benchmark: " + req.name + "(" + e.getMessage() + ")", 400);
+		}
 
-        // Get the object from the event and show its content type
-        String bucket = event.getRecords().get(0).getS3().getBucket().getName();
-        String key = event.getRecords().get(0).getS3().getObject().getKey();
-        try {
-            S3Object response = s3.getObject(new GetObjectRequest(bucket, key));
-            String contentType = response.getObjectMetadata().getContentType();
-            context.getLogger().log("CONTENT TYPE: " + contentType);
-            return contentType;
-        } catch (Exception e) {
-            e.printStackTrace();
-            context.getLogger().log(String.format(
-                "Error getting object %s from bucket %s. Make sure they exist and"
-                + " your bucket is in the same region as this function.", key, bucket));
-            throw e;
-        }
+		return response;
     }
 }

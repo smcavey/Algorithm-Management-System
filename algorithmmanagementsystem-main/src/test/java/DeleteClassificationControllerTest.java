@@ -29,7 +29,7 @@ public class DeleteClassificationControllerTest extends LambdaTest {
         
         // try again and this should fail
         d_resp = new DeleteClassificationController().handleRequest(dcr, createContext("delete"));
-        Assert.assertEquals(422, d_resp.statusCode);
+        Assert.assertEquals(422, d_resp.httpCode);
     }
    
 }

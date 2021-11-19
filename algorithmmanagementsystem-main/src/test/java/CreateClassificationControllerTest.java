@@ -23,8 +23,8 @@ public class CreateClassificationControllerTest extends LambdaTest {
     
     @Test
     public void testCreateClassificationSimple() {
-    	String SAMPLE_INPUT_STRING = "{\"name\": \"testClassificationName2\", \"description\": \"testClassificationDescription\"}";
-        String RESULT = "testClassificationName2";
+    	String SAMPLE_INPUT_STRING = "{\"name\": \"unitTestTest\", \"description\": \"testClassificationDescription\", \"token\": \"mtdll4k2cgflr3et82fgekdn3q\"}";
+        String RESULT = "unitTestTest";
         
         try {
         	testInput(SAMPLE_INPUT_STRING, RESULT);

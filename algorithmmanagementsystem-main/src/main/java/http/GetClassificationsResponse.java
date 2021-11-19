@@ -7,18 +7,18 @@ import model.Classification;
 
 public class GetClassificationsResponse {
 	public final List<Classification> list;
-	public final int statusCode;
+	public final int httpCode;
 	public final String error;
 	
 	public GetClassificationsResponse (List<Classification> list, int code) {
 		this.list = list;
-		this.statusCode = code;
+		this.httpCode = code;
 		this.error = "";
 	}
 	
 	public GetClassificationsResponse (int code, String errorMessage) {
 		this.list = new ArrayList<Classification>();
-		this.statusCode = code;
+		this.httpCode = code;
 		this.error = errorMessage;
 	}
 	

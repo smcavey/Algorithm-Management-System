@@ -21,6 +21,7 @@ import db.DatabaseUtil;
 import db.UsersDAO;
 import http.CreateAlgorithmRequest;
 import http.CreateAlgorithmResponse;
+import http.CreateClassificationResponse;
 import model.Algorithm;
 
 public class CreateAlgorithmController implements RequestHandler<CreateAlgorithmRequest, CreateAlgorithmResponse> {
@@ -44,48 +45,22 @@ public class CreateAlgorithmController implements RequestHandler<CreateAlgorithm
 			return false;
 		}
 	}
-    
-	boolean createSystemAlgorithm(String name, String description, String classification) throws Exception {
-		if (logger != null) { logger.log("in createSystemAlgorithm"); }
-		
-		if (s3 == null) {
-			logger.log("attach to S3 request");
-			s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
-			logger.log("attach to S3 succeed");
-		}
-
-		String bucket = REAL_BUCKET;
-		
-		byte[] contents = ("" + description).getBytes();
-		ByteArrayInputStream bais = new ByteArrayInputStream(contents);
-		ObjectMetadata omd = new ObjectMetadata();
-		omd.setContentLength(contents.length);
-		
-		// makes the object publicly visible
-		PutObjectResult res = s3.putObject(new PutObjectRequest("calculator-aws-example", bucket + name, bais, omd)
-				.withCannedAcl(CannedAccessControlList.PublicRead));
-		
-		// if we ever get here, then whole thing was stored
-		return true;
-	}
 
     @Override
     public CreateAlgorithmResponse handleRequest(CreateAlgorithmRequest req, Context context) {
     	
     	CreateAlgorithmResponse response;
     	try {
-			if (req.system) {
-				if (createSystemAlgorithm(req.name, req.description, req.classification)) {
-					response = new CreateAlgorithmResponse(req.name);
-				} else {
-					response = new CreateAlgorithmResponse(req.name, 400);
-				}
+    		// check for valid token
+    		UsersDAO db = new UsersDAO();
+    		if (!db.validToken(req.token)) {
+    			return new CreateAlgorithmResponse("The token passed in (" + req.token + ") is not valid", 400);
+    		}
+    		
+			if (createAlgorithm(req.name, req.description, req.classification)) {
+				response = new CreateAlgorithmResponse(req.name);
 			} else {
-				if (createAlgorithm(req.name, req.description, req.classification)) {
-					response = new CreateAlgorithmResponse(req.name);
-				} else {
-					response = new CreateAlgorithmResponse(req.name, 400);
-				}
+				response = new CreateAlgorithmResponse(req.name, 400);
 			}
 		} catch (Exception e) {
 			response = new CreateAlgorithmResponse("Unable to create algorithm: " + req.name + "(" + e.getMessage() + ")", 400);

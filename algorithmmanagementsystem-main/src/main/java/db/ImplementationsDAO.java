@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Algorithm;
+import model.Benchmark;
 import model.Implementation;
 
 public class ImplementationsDAO {
@@ -121,6 +122,20 @@ public class ImplementationsDAO {
         String description = resultSet.getString("description");
         String algorithm = resultSet.getString("algorithm");
         return new Implementation (fileName, description, algorithm);
+    }
+    
+    public boolean deleteImplementation(Implementation implementation) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE filename = ?;");
+            ps.setString(1, implementation.fileName);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to insert implementation: " + e.getMessage());
+        }
     }
 
 }
