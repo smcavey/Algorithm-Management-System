@@ -12,7 +12,12 @@
     <script type="text/javascript" src="../js/addAlgorithm.js"></script>
     <script type="text/javascript" src="../js/listAllAlgorithms.js"></script>
     <script type="text/javascript" src="../js/addImplementation.js"></script>
+    <script type="text/javascript" src="../js/removeImplementation.js"></script>    
     <script type="text/javascript" src="../js/listAllImplementations.js"></script>
+    <script type="text/javascript" src="../js/addBenchmark.js"></script>
+    <script type="text/javascript" src="../js/listAllBenchmarks.js"></script>
+    <script type="text/javascript" src="../js/removeBenchmark.js"></script>    
+    
     
  	
     
@@ -116,7 +121,10 @@
     <button type="button" id="addAlgorithm" onclick="showAlgorithmForm()">Add Algorithm</button>
     <button type="button" id="addImplementation" onclick="showImplementationForm()">Add Implementation</button>
     <!--not yet functional-->
-    <button type="button" id="addProblemInstance" >Add Problem Instance</button>
+    <button type="button" id="addProblemInstance" onclick="showProblemInstanceForm()">Add Problem Instance</button>
+    <button type="button" id="addBenchmark" onclick="showBenchmarkForm()">Add Benchmark</button>
+	<button type="button" id="userActivity" onclick="window.location='userActivity.html';">View User Activity and Registered Users</button>
+	
 
     <div class="form-popup" id="classificationForm">
         <form class="form-container">
@@ -217,7 +225,7 @@
                 class="textInput"
                 name="ImplementationFileName"     
                 type="text"
-                placeholder="Implementation File Name"
+                placeholder="i.e. HelloWorld.java"
                 value=""
                 id="ImplementationFileName"
                 required
@@ -248,7 +256,132 @@
             </center>
         </form>
       </div>
-      
+
+      <div class="form-popup" id="problemInstanceForm">
+        <form class="form-container">
+          <h2><center>Describe Problem Instance</center></h2>
+          <center>
+            <label for="pi_algorithmName"><b> Algorithm Name</b></label>
+            <input
+                class="textInput"
+              name="pi_algorithmName"     
+              type="text"
+              placeholder="Algorithm Name"
+              value=""
+              id="pi_algorithmName"
+              required
+            />
+            <label for="problemInstanceUpload"><b>Upload Problem Instance:</b></label>
+            <input 
+                type="file" 
+                id="problemInstanceUpload" 
+                name="problemInstanceUpload"
+                value="" 
+                required
+                onchange="getBase64(event)"
+                />      
+            <br></br>
+            <button type="button" id="addProblemInstance" onclick="createProblemInstance()" >Submit</button>
+            <button type="button" class="cancelProblemInstancebtn" onclick="closeProblemInstanceForm()">Close</button>
+          </center>
+        </form>
+      </div>
+
+      <div class="form-popup" id="benchmarkForm">
+        <form class="form-container">
+            <h2><center>Describe Benchmark</center></h2>
+            <center>
+            <label for="b_ImplementationFileName"><b>Implementation File Name</b></label>
+            <input
+                class="textInput"
+                name="b_ImplementationFileName"     
+                type="text"
+                placeholder="i.e. HelloWorld.java"
+                value=""
+                id="b_ImplementationFileName"
+                required
+            />
+            <label for="benchmarkName"><b>Benchmark Name</b></label>
+            <input
+              class="textInput"
+              name="benchmarkName"     
+              type="text"
+              placeholder="Benchmark Name"
+              value=""
+              id="benchmarkName"
+              required
+            />
+            <label for="l1cache"><b>L1 Cache</b></label>
+            <input
+                type="text"
+                placeholder="L1 Cache"
+                name="l1cache"
+                id="l1cache"
+                value=""
+                required
+            /> 
+            <label for="l2cache"><b>L2 Cache</b></label>
+            <input
+                type="text"
+                placeholder="L2 Cache"
+                name="l2cache"
+                id="l2cache"
+                value=""
+                required
+            /> 
+            <label for="l3cache"><b>L3 Cache</b></label>
+            <input
+                type="text"
+                placeholder="L3 Cache"
+                name="l3cache"
+                id="l3cache"
+                value=""
+                required
+            />  
+            <br></br>
+            <label for="ram"><b>RAM</b></label>
+            <input
+                type="text"
+                placeholder="RAM"
+                name="ram"
+                id="ram"
+                value=""
+                required
+            /> 
+            <label for="threads"><b># of Threads</b></label>
+            <input
+                type="text"
+                placeholder="# of Threads"
+                name="threads"
+                id="threads"
+                value=""
+                required
+            />
+            <label for="cores"><b># of Cores</b></label>
+            <input
+                type="text"
+                placeholder="# of Cores"
+                name="cores"
+                id="cores"
+                value=""
+                required
+            />  
+            <label for="manufacturer"><b>CPU Manufacturer</b></label>
+            <input
+                type="text"
+                placeholder="CPU Manufacturer"
+                name="manufacturer"
+                id="manufacturer"
+                value=""
+                required
+            /> 
+            <br></br>
+            <button type="button" id="addBenchmark" onclick="createBenchmark()">Submit</button>
+            <button type="button" class="cancelBenchmarkbtn" onclick="closeBenchmarkForm()">Close</button>
+            </center>
+        </form>
+      </div>
+
       <div id="classificationList"></div>
       
 </body>
@@ -300,6 +433,18 @@ function showImplementationForm() {
 }
 function closeImplementationForm() {
 	document.getElementById("implementationForm").style.display = "none";
+}
+function showProblemInstanceForm() {
+	document.getElementById("problemInstanceForm").style.display = "block";
+}
+function closeProblemInstanceForm() {
+	document.getElementById("problemInstanceForm").style.display = "none";
+}
+function showBenchmarkForm() {
+	document.getElementById("benchmarkForm").style.display = "block";
+}
+function closeBenchmarkForm() {
+	document.getElementById("benchmarkForm").style.display = "none";
 }
 </script>
 </html>
