@@ -14,6 +14,7 @@ import http.GetAlgorithmRequest;
 import http.GetAlgorithmResponse;
 import model.Algorithm;
 
+@Deprecated
 public class GetAlgorithmController implements RequestHandler<GetAlgorithmRequest, GetAlgorithmResponse> {
 
 	private AmazonS3 s3 = null;

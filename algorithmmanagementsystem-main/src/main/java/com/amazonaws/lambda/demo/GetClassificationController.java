@@ -18,6 +18,7 @@ import http.LoginResponse;
 import model.Classification;
 import model.User;
 
+@Deprecated
 public class GetClassificationController implements RequestHandler<GetClassificationRequest, GetClassificationResponse> {
 
 	private AmazonS3 s3 = null;

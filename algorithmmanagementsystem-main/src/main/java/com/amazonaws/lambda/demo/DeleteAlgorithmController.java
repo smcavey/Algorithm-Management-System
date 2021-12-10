@@ -1,42 +1,58 @@
 package com.amazonaws.lambda.demo;
 
+import java.util.List;
+
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.S3Event;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 
-public class DeleteAlgorithmController implements RequestHandler<S3Event, String> {
+import db.BenchmarksDAO;
+import db.ImplementationsDAO;
+import db.AlgorithmsDAO;
+import http.DeleteAlgorithmRequest;
+import http.DeleteAlgorithmResponse;
+import model.Benchmark;
+import model.Implementation;
 
-    private AmazonS3 s3 = AmazonS3ClientBuilder.standard().build();
+public class DeleteAlgorithmController implements RequestHandler<DeleteAlgorithmRequest,DeleteAlgorithmResponse> {
 
-    public DeleteAlgorithmController() {}
+	public LambdaLogger logger = null;
 
-    // Test purpose only.
-    DeleteAlgorithmController(AmazonS3 s3) {
-        this.s3 = s3;
-    }
+	@Override
+	public DeleteAlgorithmResponse handleRequest(DeleteAlgorithmRequest req, Context context) {
+		logger = context.getLogger();
+		logger.log("Loading Java Lambda handler to delete");
 
-    @Override
-    public String handleRequest(S3Event event, Context context) {
-        context.getLogger().log("Received event: " + event);
+		DeleteAlgorithmResponse response = null;
+		logger.log(req.toString());
 
-        // Get the object from the event and show its content type
-        String bucket = event.getRecords().get(0).getS3().getBucket().getName();
-        String key = event.getRecords().get(0).getS3().getObject().getKey();
-        try {
-            S3Object response = s3.getObject(new GetObjectRequest(bucket, key));
-            String contentType = response.getObjectMetadata().getContentType();
-            context.getLogger().log("CONTENT TYPE: " + contentType);
-            return contentType;
-        } catch (Exception e) {
-            e.printStackTrace();
-            context.getLogger().log(String.format(
-                "Error getting object %s from bucket %s. Make sure they exist and"
-                + " your bucket is in the same region as this function.", key, bucket));
-            throw e;
-        }
-    }
+		AlgorithmsDAO dao = new AlgorithmsDAO();
+		ImplementationsDAO idao = new ImplementationsDAO();
+		BenchmarksDAO bdao = new BenchmarksDAO();
+
+		try {
+			if (dao.deleteAlgorithm(req)) {
+		        List<Implementation> allImplementations = idao.getAllImplementations(req.name);
+		        if(!allImplementations.isEmpty()) {
+		        	for(Implementation imp : allImplementations) {
+		        		if(idao.deleteImplementationGivenAlgorithm(imp)) {
+				        	List<Benchmark> allBenchmarks = bdao.getAllBenchmarks(imp.fileName);
+				        	if(!allBenchmarks.isEmpty()) {
+				        		for(Benchmark ben : allBenchmarks) {
+				        			bdao.deleteBenchmarkGivenImplementation(ben);
+				        		}
+				        	}
+		        		}
+		        	}
+		        }
+				response = new DeleteAlgorithmResponse(req.name, 200);
+			} else {
+				response = new DeleteAlgorithmResponse(req.name, 422, "Unable to delete Algorithm.");
+			}
+		} catch (Exception e) {
+			response = new DeleteAlgorithmResponse(req.name, 403, "Unable to delete Algorithm: " + req.name + "(" + e.getMessage() + ")");
+		}
+
+		return response;
+	}
 }

@@ -5,9 +5,9 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import db.ClassificationsDAO;
+import db.UsersDAO;
 import http.DeleteClassificationRequest;
 import http.DeleteClassificationResponse;
-import model.Classification;
 
 /**
  * No more JSON parsing
@@ -25,12 +25,15 @@ public class DeleteClassificationController implements RequestHandler<DeleteClas
 		logger.log(req.toString());
 
 		ClassificationsDAO dao = new ClassificationsDAO();
-		
-		// See how awkward it is to call delete with an object, when you only
-		// have one part of its information?
-		Classification classification = new Classification(req.name, "");
+
 		try {
-			if (dao.deleteClassification(classification)) {
+    		// check for valid token
+    		UsersDAO db = new UsersDAO();
+    		if (!db.validToken(req.token)) {
+    			return new DeleteClassificationResponse("The token passed in (" + req.token + ") is not valid", 400);
+    		}
+			
+			if (dao.deleteClassification(req)) {
 				response = new DeleteClassificationResponse(req.name, 200);
 			} else {
 				response = new DeleteClassificationResponse(req.name, 422, "Unable to delete classification.");

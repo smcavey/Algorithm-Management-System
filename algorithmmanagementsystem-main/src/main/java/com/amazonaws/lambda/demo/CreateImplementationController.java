@@ -1,26 +1,21 @@
 package com.amazonaws.lambda.demo;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.util.Base64;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
 
 import db.ImplementationsDAO;
 import db.UsersDAO;
-import http.CreateClassificationResponse;
 import http.CreateImplementationRequest;
 import http.CreateImplementationResponse;
 import model.Implementation;
@@ -40,16 +35,14 @@ public class CreateImplementationController implements RequestHandler<CreateImpl
 	 * 
 	 * @throws Exception 
 	 */
-	boolean createImplementation(String fileName, String description, String algorithm, String fileContent) throws Exception { 
+	boolean createImplementation(CreateImplementationRequest req) throws Exception { 
 		if (logger != null) { logger.log("in createImplementation"); }
 		ImplementationsDAO dao = new ImplementationsDAO();
-		
+
 		// check if present
-		Implementation exist = dao.getImplementation(fileName);
-		Implementation implementation = new Implementation (fileName, description, algorithm);
-		implementation.setFileContent(fileContent);
+		Implementation exist = dao.getImplementation(req.fileName);
 		if (exist == null) {
-			return dao.createImplementation(implementation);
+			return dao.createImplementation(req);
 		} else {
 			return false;
 		}
@@ -100,7 +93,7 @@ public class CreateImplementationController implements RequestHandler<CreateImpl
 			} else {
 				response = new CreateImplementationResponse(req.fileName, 422);
 			}
-			if (createImplementation(req.fileName, req.description, req.algorithm, req.fileContent)) {
+			if (createImplementation(req)) {
 				response = new CreateImplementationResponse(req.fileName);
 			} else {
 				response = new CreateImplementationResponse(req.fileName, 422);

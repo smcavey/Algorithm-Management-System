@@ -1,27 +1,15 @@
 package com.amazonaws.lambda.demo;
 
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
-
 import db.UsersDAO;
 import model.User;
 import http.CreateUserRequest;
 import http.CreateUserResponse;
 
 public class CreateUserController implements RequestHandler<CreateUserRequest, CreateUserResponse> {
-	
-	private static final String REAL_BUCKET = null;
 
 	LambdaLogger logger;
 
@@ -46,7 +34,6 @@ public class CreateUserController implements RequestHandler<CreateUserRequest, C
 	boolean createSystemUser(String username, String password) throws Exception {
 		// TODO: how will this work?
 
-		// if we ever get here, then whole thing was stored
 		return true;
 	}
 

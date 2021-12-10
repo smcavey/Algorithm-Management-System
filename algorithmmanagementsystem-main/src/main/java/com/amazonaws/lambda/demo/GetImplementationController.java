@@ -25,6 +25,7 @@ import http.GetImplementationRequest;
 import http.GetImplementationResponse;
 import model.Implementation;
 
+@Deprecated
 public class GetImplementationController implements RequestHandler<GetImplementationRequest, GetImplementationResponse> {
 
 	// To access S3 storage

@@ -1,42 +1,51 @@
 package com.amazonaws.lambda.demo;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 
-public class GetUserActivityController implements RequestHandler<S3Event, String> {
+import db.UserActivityDAO;
+import http.GetUserActivityRequest;
+import http.GetUserActivityResponse;
+import model.UserActivity;
 
-    private AmazonS3 s3 = AmazonS3ClientBuilder.standard().build();
+public class GetUserActivityController implements RequestHandler<GetUserActivityRequest, GetUserActivityResponse> {
 
-    public GetUserActivityController() {}
+	private AmazonS3 s3 = null;
 
-    // Test purpose only.
-    GetUserActivityController(AmazonS3 s3) {
-        this.s3 = s3;
-    }
+	LambdaLogger logger;
 
-    @Override
-    public String handleRequest(S3Event event, Context context) {
-        context.getLogger().log("Received event: " + event);
+	List<UserActivity> getUserActivity() throws Exception { 
+		if (logger != null) { logger.log("in getUserActivity"); }
+		UserActivityDAO dao = new UserActivityDAO();
 
-        // Get the object from the event and show its content type
-        String bucket = event.getRecords().get(0).getS3().getBucket().getName();
-        String key = event.getRecords().get(0).getS3().getObject().getKey();
-        try {
-            S3Object response = s3.getObject(new GetObjectRequest(bucket, key));
-            String contentType = response.getObjectMetadata().getContentType();
-            context.getLogger().log("CONTENT TYPE: " + contentType);
-            return contentType;
-        } catch (Exception e) {
-            e.printStackTrace();
-            context.getLogger().log(String.format(
-                "Error getting object %s from bucket %s. Make sure they exist and"
-                + " your bucket is in the same region as this function.", key, bucket));
-            throw e;
-        }
-    }
+		List<UserActivity> allUserActivity = dao.getAllUserActivity();
+		if(!allUserActivity.isEmpty()) {
+			return allUserActivity;
+		}
+		else {
+			return Collections.EMPTY_LIST;
+		}
+	}
+
+	@Override
+	public GetUserActivityResponse handleRequest(GetUserActivityRequest req, Context context)  {
+		logger = context.getLogger();
+		logger.log("Loading Java Lambda handler to list all user activity");
+
+		GetUserActivityResponse response;
+		try {
+			// get all user activity history
+			List<UserActivity> list = getUserActivity();
+			response = new GetUserActivityResponse("Success", list, 200);
+		} catch (Exception e) {
+			response = new GetUserActivityResponse("Error", 403, e.getMessage());
+		}
+		
+		return response;
+	}
 }

@@ -6,14 +6,11 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.s3.AmazonS3;
 
 import db.BenchmarksDAO;
-import db.UsersDAO;
 import http.CreateBenchmarkRequest;
 import http.CreateBenchmarkResponse;
 import model.Benchmark;
 
 public class CreateBenchmarkController implements RequestHandler<CreateBenchmarkRequest, CreateBenchmarkResponse> {
-
-	private static final String REAL_BUCKET = null;
 
 	LambdaLogger logger;
 
@@ -38,12 +35,6 @@ public class CreateBenchmarkController implements RequestHandler<CreateBenchmark
     	
     	CreateBenchmarkResponse response;
     	try {
-    		// check for valid token
-    		UsersDAO db = new UsersDAO();
-    		if (!db.validToken(req.token)) {
-    			return new CreateBenchmarkResponse("The token passed in (" + req.token + ") is not valid", 400);
-    		}
-    		
 			if (createBenchmark(req.name, req.l1cache, req.l2cache, req.l3cache, req.ram, req.threads, req.cores, req.manufacturer, req.implementation)) {
 				response = new CreateBenchmarkResponse(req.name);
 			} else {
