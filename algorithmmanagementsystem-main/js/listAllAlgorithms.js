@@ -43,7 +43,7 @@ function processListAllAlgorithmResponse(result, id) {
 	
 	var classificationName = constantJson["classification"];
 	
-    output = output + "<div style=\"text-indent:1em;\"" + "id=\"c" + algorithmName + "\"><b>" + algorithmName + ":</b> = " + algorithmDesc 
+    output = output + "<div style=\"text-indent:1em;\"" + "id=\"c" + algorithmName + "\"><b>" + algorithmName + ": </b>" + algorithmDesc 
 	+ "<img src='deleteIcon.png'></img><br></div>"
 	+ "<div id=\"" + algorithmName + "implementationList" + "\"" + "></div>";
 	

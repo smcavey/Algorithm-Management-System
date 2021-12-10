@@ -17,6 +17,10 @@ var addAlgorithmURL = baseURL + "createAlgorithm"; // POST for algorithms
 var ListAlgorithmURL = baseURL + "getAlgorithm"; // POST for algorithms
 var deleteAlgorithmURL = baseURL + ""; // DELETE (POST) for algorithms
 
-var addImplementationURL = baseURL + "createImplementation"; // POST for algorithms
-var ListImplementationURL = baseURL + "getImplementation"; // POST for algorithms
-var deleteImplementationURL = baseURL + ""; // DELETE (POST) for algorithms
+var addImplementationURL = baseURL + "createImplementation"; // POST for Implementatio
+var ListImplementationURL = baseURL + "getImplementation"; // POST for Implementatio
+var deleteImplementationURL = baseURL + "deleteImplementation"; // DELETE (POST) for implemenetations
+
+var addBenchmarkURL = baseURL + "createBenchmark"; // POST for Benchmark
+var ListBenchmarkURL = baseURL + "getBenchmarks"; // POST for Benchmark
+var deleteBenchmarkURL = baseURL + "deleteBenchmark"; // DELETE (POST) for Benchmark

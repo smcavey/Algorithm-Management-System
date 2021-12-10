@@ -1,4 +1,4 @@
-function processDeleteAlgorithmResponse(result) {
+function processDeleteBenchmarkResponse(result) {
   // Can grab any DIV or SPAN HTML element and can then manipulate its
   // contents dynamically via javascript
   console.log("deleted :" + result);
@@ -6,16 +6,27 @@ function processDeleteAlgorithmResponse(result) {
   refreshClassificationList();
 }
 
-function requestDeleteAlgorithm(val) {
+function requestDeleteBenchmark(val) {
    if (confirm("Request to delete " + val)) {
-     processDeleteAlgorithm(val);
+     processDeleteBenchmark(val);
    }
 }
 
-function processDeleteAlgorithm(name) {
+function processDeleteBenchmark(name) {
 
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", deleteAlgorithmURL + "/" + name, true);    // ISSUE with POST v. DELETE in CORS/API Gateway
+
+  var data = {};
+  data["name"] = name;
+  data["token"] = document.getElementById("token").innerHTML;
+
+  var jsData = JSON.stringify(data);
+	console.log("JS in remove benchmark:" + jsData);
+
+  xhr.open("POST", deleteBenchmarkURL, true);    // ISSUE with POST v. DELETE in CORS/API Gateway
+
+  xhr.send(jsData);  //  NEED TO GET IT GOING
+
 
   // This will process results and update HTML as appropriate. 
   xhr.onloadend = function () {
@@ -24,7 +35,7 @@ function processDeleteAlgorithm(name) {
 	  if (xhr.readyState == XMLHttpRequest.DONE) {
 		  if (xhr.status == 200) {
 			  console.log ("XHR:" + xhr.responseText);
-			  processDeleteAlgorithmResponse(xhr.responseText);
+			  processDeleteBenchmarkResponse(xhr.responseText);
 		  } else {
 			  console.log("actual:" + xhr.responseText)
 			  var js = JSON.parse(xhr.responseText);
@@ -32,10 +43,9 @@ function processDeleteAlgorithm(name) {
 			  alert (err);
 		  }
 	  } else {
-		  processDeleteAlgorithmResponse("N/A");
+		  processDeleteBenchmarkResponse("N/A");
 	  }
   };
   
-  xhr.send(null);  //  NEED TO GET IT GOING
 }
 

@@ -46,9 +46,13 @@ function processListAllImplementationResponse(result, id) {
 	var algorithmName = constantJson["algorithm"];
 	
 	
-    output = output + "<div style=\"text-indent:2em;\"" + "id=\"a" + implementationFileName + "\"><b>" + implementationFileName + ":</b> = " + implementationDesc 
+    output = output + "<div style=\"text-indent:2em;\"" + "id=\"a" + implementationFileName + "\"><b>" + implementationFileName + ": </b>" + implementationDesc 
 	+ "<a href=" + implementationFilePath + ">....Download</a>"
-	+ "<img src='deleteIcon.png'></img><br></div>";
+	+ "<a href='javascript:requestDeleteImplementation(\"" + implementationFileName + "\")'><img src='deleteIcon.png'></img></a> <br></div>"
+	+ "<div id=\"" + implementationFileName + "benchmarkList" + "\"" + "></div>";
+
+	refreshBenchmarkList(implementationFileName + "benchmarkList", implementationFileName);
+
   }
 
   // Update computation result

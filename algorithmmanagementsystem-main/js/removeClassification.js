@@ -3,7 +3,7 @@ function processDeleteClassificationResponse(result) {
   // contents dynamically via javascript
   console.log("deleted :" + result);
   
-  refreshConstantsList();
+  refreshClassificationList();
 }
 
 function requestDeleteClassification(val) {
@@ -24,7 +24,7 @@ function processDeleteClassification(name) {
 	  if (xhr.readyState == XMLHttpRequest.DONE) {
 		  if (xhr.status == 200) {
 			  console.log ("XHR:" + xhr.responseText);
-			  processDeleteResponse(xhr.responseText);
+			  processDeleteClassificationResponse(xhr.responseText);
 		  } else {
 			  console.log("actual:" + xhr.responseText)
 			  var js = JSON.parse(xhr.responseText);
