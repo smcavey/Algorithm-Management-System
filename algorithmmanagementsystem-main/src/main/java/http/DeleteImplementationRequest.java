@@ -7,7 +7,7 @@ public class DeleteImplementationRequest {
 	public void setName(String name) {this.filename = name; }
 	public String getName() {return filename; }
 	public void setToken(String token) {this.token = token;}
-	public String getTokenf() {return token;}
+	public String getToken() {return token;}
 	
 	public DeleteImplementationRequest (String n, String token) {
 		this.filename = n;

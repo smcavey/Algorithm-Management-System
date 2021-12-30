@@ -5,6 +5,7 @@ public class CreateClassificationRequest {
 	public String name;
 	public String description;
 	public String token;
+	public String classification;
 	
 	public String getName( ) { return name; }
 	public void setName(String name) { this.name = name; }
@@ -30,6 +31,13 @@ public class CreateClassificationRequest {
 	public CreateClassificationRequest (String name, String description, String token) {
 		this.name = name;
 		this.description = description;
+		this.token = token;
+	}
+	
+	public CreateClassificationRequest (String name, String description, String classification, String token) {
+		this.name = name;
+		this.description = description;
+		this.classification = classification;
 		this.token = token;
 	}
 	

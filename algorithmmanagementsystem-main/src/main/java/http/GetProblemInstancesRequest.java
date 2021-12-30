@@ -1,15 +1,15 @@
 package http;
 
-public class GetImplementationsRequest {
+public class GetProblemInstancesRequest {
 	public String name;
 	
 	public String getName( ) { return name; }
 	public void setName(String name) { this.name = name; }
 
-	public GetImplementationsRequest() {
+	public GetProblemInstancesRequest() {
 	}
 	
-	public GetImplementationsRequest (String name) {
+	public GetProblemInstancesRequest (String name) {
 		this.name = name;
 	}
 	

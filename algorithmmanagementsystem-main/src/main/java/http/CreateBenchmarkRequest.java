@@ -11,7 +11,6 @@ public class CreateBenchmarkRequest {
 	public String ram;
 	public int cores;
 	public int threads;
-	public String token;
 	
 	public String getName( ) { return name; }
 	public void setName(String name) { this.name = name; }
@@ -37,23 +36,7 @@ public class CreateBenchmarkRequest {
 	public int getThreads( ) { return threads; }
 	public void setThreads(int threads) { this.threads = threads; }
 	
-	public String getToken() { return token; }
-	public void settoken(String token) { this.token = token; }
-	
 	public CreateBenchmarkRequest() {
-	}
-	
-	public CreateBenchmarkRequest (String name, String l1cache, String l2cache, String l3cache, String ram, int threads, int cores, String manufacturer, String implementation, String token) {
-		this.name = name;
-		this.l1cache = l1cache;
-		this.l2cache = l2cache;
-		this.l3cache = l3cache;
-		this.ram = ram;
-		this.threads = threads;
-		this.cores = cores;
-		this.manufacturer = manufacturer;
-		this.implementation = implementation;
-		this.token = token;
 	}
 	
 	public CreateBenchmarkRequest (String name, String l1cache, String l2cache, String l3cache, String ram, int threads, int cores, String manufacturer, String implementation) {
@@ -70,7 +53,7 @@ public class CreateBenchmarkRequest {
 	
 	public String toString() {
 		return "CreateBenchmark(" + name + ", " + implementation + ", " + l1cache + ", " + ", " + l2cache + ", " + l3cache + ", " +
-				manufacturer + ", " + ram + ", " + cores + ", " + threads + ", " + token + ")";
+				manufacturer + ", " + ram + ", " + cores + ", " + threads + ")";
 	}
 
 }
