@@ -1,6 +1,7 @@
 package com.amazonaws.lambda.demo;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.s3.AmazonS3;
@@ -8,35 +9,37 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 
-public class MergeClassificationController implements RequestHandler<S3Event, String> {
+import db.AlgorithmsDAO;
+import db.ClassificationsDAO;
+import http.MergeClassificationRequest;
+import http.MergeClassificationResponse;
+import http.ReclassifyAlgorithmRequest;
+import http.ReclassifyAlgorithmResponse;
 
-    private AmazonS3 s3 = AmazonS3ClientBuilder.standard().build();
+public class MergeClassificationController implements RequestHandler<MergeClassificationRequest, MergeClassificationResponse> {
+	
+	public LambdaLogger logger = null;
+	
+	@Override
+	public MergeClassificationResponse handleRequest(MergeClassificationRequest req, Context context) {
+		logger = context.getLogger();
+		logger.log("Loading Java Lambda handler to merge classifications");
 
-    public MergeClassificationController() {}
+		MergeClassificationResponse response = null;
+		logger.log(req.toString());
 
-    // Test purpose only.
-    MergeClassificationController(AmazonS3 s3) {
-        this.s3 = s3;
-    }
+		ClassificationsDAO dao = new ClassificationsDAO();
 
-    @Override
-    public String handleRequest(S3Event event, Context context) {
-        context.getLogger().log("Received event: " + event);
+		try {
+			if (dao.mergeClassifications(req)) {
+				response = new MergeClassificationResponse(req.classificationNew, 201);
+			} else {
+				response = new MergeClassificationResponse(req.classificationNew, 400, "Unable to merge classifications.");
+			}
+		} catch (Exception e) {
+			response = new MergeClassificationResponse(req.classificationNew, 400, "Unable to merge classifications: " + req.classificationNew + "(" + e.getMessage() + ")");
+		}
 
-        // Get the object from the event and show its content type
-        String bucket = event.getRecords().get(0).getS3().getBucket().getName();
-        String key = event.getRecords().get(0).getS3().getObject().getKey();
-        try {
-            S3Object response = s3.getObject(new GetObjectRequest(bucket, key));
-            String contentType = response.getObjectMetadata().getContentType();
-            context.getLogger().log("CONTENT TYPE: " + contentType);
-            return contentType;
-        } catch (Exception e) {
-            e.printStackTrace();
-            context.getLogger().log(String.format(
-                "Error getting object %s from bucket %s. Make sure they exist and"
-                + " your bucket is in the same region as this function.", key, bucket));
-            throw e;
-        }
-    }
+		return response;
+	}
 }

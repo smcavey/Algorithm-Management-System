@@ -4,6 +4,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import db.AlgorithmsDAO;
+import db.UsersDAO;
+import http.DeleteImplementationResponse;
 import http.ReclassifyAlgorithmRequest;
 import http.ReclassifyAlgorithmResponse;
 
@@ -22,6 +24,11 @@ public class ReclassifyAlgorithmController implements RequestHandler<ReclassifyA
 		AlgorithmsDAO dao = new AlgorithmsDAO();
 
 		try {
+    		// check for valid token
+    		UsersDAO db = new UsersDAO();
+    		if (!db.validToken(req.token)) {
+    			return new ReclassifyAlgorithmResponse("The token passed in (" + req.token + ") is not valid", 400);
+    		}
 			if (dao.reclassifyAlgorithm(req)) {
 				response = new ReclassifyAlgorithmResponse(req.algorithm, 201);
 			} else {

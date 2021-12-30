@@ -3,7 +3,6 @@ package com.amazonaws.lambda.demo;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.s3.AmazonS3;
 import db.UsersDAO;
 import model.User;
 import http.CreateUserRequest;
@@ -12,8 +11,6 @@ import http.CreateUserResponse;
 public class CreateUserController implements RequestHandler<CreateUserRequest, CreateUserResponse> {
 
 	LambdaLogger logger;
-
-    private AmazonS3 s3 = null;
 
 	boolean createUser(String username, String password) throws Exception { 
 		if (logger != null) { logger.log("in createUser"); }
@@ -31,30 +28,15 @@ public class CreateUserController implements RequestHandler<CreateUserRequest, C
 		}
 	}
 
-	boolean createSystemUser(String username, String password) throws Exception {
-		// TODO: how will this work?
-
-		return true;
-	}
-
-
     @Override
     public CreateUserResponse handleRequest(CreateUserRequest req, Context context) {
     	
     	CreateUserResponse response;
     	try {
-			if (req.system) {
-				if (createSystemUser(req.username, req.password)) {
-					response = new CreateUserResponse(req.username);
-				} else {
-					response = new CreateUserResponse(req.username, 400);
-				}
+			if (createUser(req.username, req.password)) {
+				response = new CreateUserResponse(req.username);
 			} else {
-				if (createUser(req.username, req.password)) {
-					response = new CreateUserResponse(req.username);
-				} else {
-					response = new CreateUserResponse(req.username, 400);
-				}
+				response = new CreateUserResponse(req.username, 400);
 			}
 		} catch (Exception e) {
 			response = new CreateUserResponse("Unable to create user: " + req.username + "(" + e.getMessage() + ")", 400);

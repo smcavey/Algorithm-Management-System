@@ -8,9 +8,11 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import db.BenchmarksDAO;
 import db.ImplementationsDAO;
+import db.UsersDAO;
 import db.AlgorithmsDAO;
 import http.DeleteAlgorithmRequest;
 import http.DeleteAlgorithmResponse;
+import http.DeleteClassificationResponse;
 import model.Benchmark;
 import model.Implementation;
 
@@ -31,6 +33,11 @@ public class DeleteAlgorithmController implements RequestHandler<DeleteAlgorithm
 		BenchmarksDAO bdao = new BenchmarksDAO();
 
 		try {
+    		// check for valid token
+    		UsersDAO db = new UsersDAO();
+    		if (!db.validToken(req.token)) {
+    			return new DeleteAlgorithmResponse("The token passed in (" + req.token + ") is not valid", 400);
+    		}
 			if (dao.deleteAlgorithm(req)) {
 		        List<Implementation> allImplementations = idao.getAllImplementations(req.name);
 		        if(!allImplementations.isEmpty()) {

@@ -5,8 +5,10 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import db.BenchmarksDAO;
+import db.UsersDAO;
 import http.DeleteBenchmarkRequest;
 import http.DeleteBenchmarkResponse;
+import http.DeleteClassificationResponse;
 import model.Benchmark;
 
 public class DeleteBenchmarkController implements RequestHandler<DeleteBenchmarkRequest,DeleteBenchmarkResponse> {
@@ -25,6 +27,11 @@ public class DeleteBenchmarkController implements RequestHandler<DeleteBenchmark
 
 		Benchmark benchmark = new Benchmark(req.name);
 		try {
+    		// check for valid token
+    		UsersDAO db = new UsersDAO();
+    		if (!db.validToken(req.token)) {
+    			return new DeleteBenchmarkResponse("The token passed in (" + req.token + ") is not valid", 400);
+    		}
 			if (dao.deleteBenchmark(benchmark)) {
 				response = new DeleteBenchmarkResponse(req.name, 200);
 			} else {

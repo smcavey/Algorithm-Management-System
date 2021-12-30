@@ -6,7 +6,6 @@ import java.util.List;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.s3.AmazonS3;
 
 import db.UserActivityDAO;
 import http.GetUserActivityRequest;
@@ -15,15 +14,13 @@ import model.UserActivity;
 
 public class GetUserActivityController implements RequestHandler<GetUserActivityRequest, GetUserActivityResponse> {
 
-	private AmazonS3 s3 = null;
-
 	LambdaLogger logger;
 
-	List<UserActivity> getUserActivity() throws Exception { 
+	List<UserActivity> getUserActivity(String username) throws Exception { 
 		if (logger != null) { logger.log("in getUserActivity"); }
 		UserActivityDAO dao = new UserActivityDAO();
 
-		List<UserActivity> allUserActivity = dao.getAllUserActivity();
+		List<UserActivity> allUserActivity = dao.getUserActivity(username);
 		if(!allUserActivity.isEmpty()) {
 			return allUserActivity;
 		}
@@ -39,8 +36,8 @@ public class GetUserActivityController implements RequestHandler<GetUserActivity
 
 		GetUserActivityResponse response;
 		try {
-			// get all user activity history
-			List<UserActivity> list = getUserActivity();
+			// get user activity for a specific user
+			List<UserActivity> list = getUserActivity(req.name);
 			response = new GetUserActivityResponse("Success", list, 200);
 		} catch (Exception e) {
 			response = new GetUserActivityResponse("Error", 403, e.getMessage());

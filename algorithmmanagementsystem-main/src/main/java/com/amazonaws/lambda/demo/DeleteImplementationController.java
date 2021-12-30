@@ -8,6 +8,8 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import db.BenchmarksDAO;
 import db.ImplementationsDAO;
+import db.UsersDAO;
+import http.DeleteClassificationResponse;
 import http.DeleteImplementationRequest;
 import http.DeleteImplementationResponse;
 import model.Benchmark;
@@ -28,6 +30,11 @@ public class DeleteImplementationController implements RequestHandler<DeleteImpl
 		BenchmarksDAO bdao = new BenchmarksDAO();
 
 		try {
+    		// check for valid token
+    		UsersDAO db = new UsersDAO();
+    		if (!db.validToken(req.token)) {
+    			return new DeleteImplementationResponse("The token passed in (" + req.token + ") is not valid", 400);
+    		}
 			if (dao.deleteImplementation(req)) {
 		        List<Benchmark> allBenchmarks = bdao.getAllBenchmarks(req.filename);
 		        if(!allBenchmarks.isEmpty()) {
