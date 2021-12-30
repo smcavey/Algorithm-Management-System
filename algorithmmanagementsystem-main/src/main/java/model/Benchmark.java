@@ -27,10 +27,4 @@ public class Benchmark {
 	public Benchmark(String name) {
 		this.name = name;
 	}
-	
-	public String toString() {
-		return ("Implementation: " + implementation + " l1cache: " + l1cache + " l2cache: " + l2cache + " l3cache: " + l3cache
-				+ " cores: " + cores + " threads: " + threads + " manufacturer: " + manufacturer + " ram: " + ram);
-	}
-
 }

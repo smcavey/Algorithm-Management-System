@@ -1,17 +1,19 @@
 package model;
 
-public class Implementation {
+public class ProblemInstance {
 
-	public final String fileName;
-	public String description;
+	public String filename;
 	public String algorithm;
 	public String fileContent; // only used on creation
 	public String filePath; // only used on return
 	
-	public Implementation(String fileName, String description, String algorithm) {
-		this.fileName = fileName;
-		this.description = description;
+	public ProblemInstance(String filename, String algorithm) {
+		this.filename = filename;
 		this.algorithm = algorithm;
+	}
+	
+	public ProblemInstance(String filename) {
+		this.filename = filename;
 	}
 	
 	public void setFilePath(String filePath) {
@@ -21,9 +23,4 @@ public class Implementation {
 	public void setFileContent(String fileContent) {
 		this.fileContent = fileContent;
 	}
-	
-	public String toString() {
-		return ("filename: " + fileName);
-	}
-
 }
