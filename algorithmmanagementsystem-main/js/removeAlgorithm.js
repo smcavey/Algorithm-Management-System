@@ -15,7 +15,18 @@ function requestDeleteAlgorithm(val) {
 function processDeleteAlgorithm(name) {
 
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", deleteAlgorithmURL + "/" + name, true);    // ISSUE with POST v. DELETE in CORS/API Gateway
+
+  var data = {};
+  //What do we need to send? Just name and token?
+  data["name"] = name;
+  data["token"] = document.getElementById("token").innerHTML;
+  
+  var jsData = JSON.stringify(data);
+	console.log("JS in remove algorithm:" + jsData);
+
+  xhr.open("POST", deleteAlgorithmURL, true);    // ISSUE with POST v. DELETE in CORS/API Gateway
+
+  xhr.send(jsData);
 
   // This will process results and update HTML as appropriate. 
   xhr.onloadend = function () {
@@ -35,7 +46,6 @@ function processDeleteAlgorithm(name) {
 		  processDeleteAlgorithmResponse("N/A");
 	  }
   };
-  
-  xhr.send(null);  //  NEED TO GET IT GOING
+
 }
 

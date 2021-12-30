@@ -1,32 +1,28 @@
-function processDeleteClassificationResponse(result) {
+function processDeleteUserResponse(result) {
   // Can grab any DIV or SPAN HTML element and can then manipulate its
   // contents dynamically via javascript
   console.log("deleted :" + result);
   
-  refreshClassificationList();
+  refreshUsersList();
 }
 
-function requestDeleteClassification(val) {
+function requestDeleteUser(val) {
    if (confirm("Request to delete " + val)) {
-     processDeleteClassification(val);
+     processDeleteUser(val);
    }
 }
 
-function processDeleteClassification(name) {
+function processDeleteUser(name) {
 
   var xhr = new XMLHttpRequest();
 
   var data = {};
-  //What do we need to send? Just name and token?
-  data["name"] = name;
-console.log("The name in DeleteClassification is: " + data["name"]);
-  data["token"] = document.getElementById("token").innerHTML;
-console.log("The token in DeleteClassification is: " + data["token"]);
+  data["username"] = name;
 
   var jsData = JSON.stringify(data);
+	console.log("JS in remove user:" + jsData);
 
-
-  xhr.open("POST", deleteClassificationURL, true);    // ISSUE with POST v. DELETE in CORS/API Gateway
+  xhr.open("POST", deleteUserURL, true);    // ISSUE with POST v. DELETE in CORS/API Gateway
 
   xhr.send(jsData);  //  NEED TO GET IT GOING
 
@@ -38,7 +34,7 @@ console.log("The token in DeleteClassification is: " + data["token"]);
 	  if (xhr.readyState == XMLHttpRequest.DONE) {
 		  if (xhr.status == 200) {
 			  console.log ("XHR:" + xhr.responseText);
-			  processDeleteClassificationResponse(xhr.responseText);
+			  processDeleteUserResponse(xhr.responseText);
 		  } else {
 			  console.log("actual:" + xhr.responseText)
 			  var js = JSON.parse(xhr.responseText);
@@ -46,7 +42,7 @@ console.log("The token in DeleteClassification is: " + data["token"]);
 			  alert (err);
 		  }
 	  } else {
-		  processDeleteClassificationResponse("N/A");
+		  processDeleteUserResponse("N/A");
 	  }
   };
   

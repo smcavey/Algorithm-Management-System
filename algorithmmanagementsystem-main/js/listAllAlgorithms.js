@@ -44,11 +44,14 @@ function processListAllAlgorithmResponse(result, id) {
 	var classificationName = constantJson["classification"];
 	
     output = output + "<div style=\"text-indent:1em;\"" + "id=\"c" + algorithmName + "\"><b>" + algorithmName + ": </b>" + algorithmDesc 
-	+ "<img src='deleteIcon.png'></img><br></div>"
-	+ "<div id=\"" + algorithmName + "implementationList" + "\"" + "></div>";
+	+ "<a href='javascript:requestDeleteAlgorithm(\"" + algorithmName + "\")'><img src='deleteIcon.png'></img></a> <br></div>"
+	+ "<div id=\"" + algorithmName + "implementationList" + "\"" + "></div>"
+	+ "<div id=\"" + algorithmName + "problemInstanceList" + "\"" + "></div>";
 	
 	refreshImplementationList(algorithmName + "implementationList", algorithmName);
-  }
+	refreshProblemInstanceList(algorithmName + "problemInstanceList", algorithmName);
+  
+}
 
   // Update computation result
   algorithmList.innerHTML = output;

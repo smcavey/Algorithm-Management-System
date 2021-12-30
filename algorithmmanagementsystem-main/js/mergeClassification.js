@@ -1,19 +1,23 @@
-function processAddClassificationResponse(result) {
+function processMergeResponse(result) {
 	
 	console.log("response: " + result);
 	
 	refreshClassificationList();
+	//location.reload();
+	
 }
 
-
-function createClassification() {
-	console.log("testing add classification here!")
-	var classificationName = document.getElementById("classificationName").value;	
+function merge() {
 	
-	var classificationDesc = document.getElementById("classificationDesc").value;
+	console.log("testing merge classification here!")
 	
-	var classificationParent = document.getElementById("parentClassificationName").value;
-
+	var classificationOne = document.getElementById("classification1Name").value;
+	
+	var classificationTwo = document.getElementById("classification2Name").value;
+	
+	var newClassification = document.getElementById("newClassificationName").value;
+	
+	
 	
 	
 	//Should we take in the username and then generate the hash here and salt?
@@ -22,16 +26,15 @@ function createClassification() {
 	var data = {};
 	
 	//not sur why this is throwing errors...could be because it doesn't know format of JSON yet defined in API
-	data["name"] = classificationName;
-	data["description"] = classificationDesc;
-	data["classification"] = classificationParent;
+	data["classificationOne"] = classificationOne;
+	data["classificationTwo"] = classificationTwo;
+	data["classificationNew"] = newClassification;
 	data["token"] = document.getElementById("token").innerHTML;
-	console.log(data["token"]);
-	
+
 	var js = JSON.stringify(data);
-	console.log("JS in classification:" + js);
+	console.log("JS in merge:" + js);
 	var xhr = new XMLHttpRequest();
- 	xhr.open("POST", addClassificationURL, true);
+ 	xhr.open("POST", mergeClassificationURL, true);
 
   	// send the collected data as JSON
   	xhr.send(js);
@@ -43,7 +46,7 @@ function createClassification() {
     	if (xhr.readyState == XMLHttpRequest.DONE) {
     		if (xhr.status == 200) {
 	      		console.log ("XHR:" + xhr.responseText);
-	      		processAddClassificationResponse(xhr.responseText);
+	      		processMergeResponse(xhr.responseText);
     	 	} else {
     			console.log("actual:" + xhr.responseText)
 			  	var js = JSON.parse(xhr.responseText);
@@ -51,11 +54,9 @@ function createClassification() {
 			  	alert (err);
     	 	}
     	} else {
-      		processAddClassificationResponse("N/A");
+      		processMergeResponse("N/A");
     	}
   	};
 
-	closeClassificationForm();
-	refreshClassificationList();
-
+	closeMergeForm();
 }

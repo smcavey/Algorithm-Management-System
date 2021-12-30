@@ -62,7 +62,7 @@ function createBenchmark() {
     	if (xhr.readyState == XMLHttpRequest.DONE) {
     		if (xhr.status == 200) {
 	      		console.log ("XHR:" + xhr.responseText);
-	      		processAddAlgorithmResponse(xhr.responseText);
+	      		processAddBenchmarkResponse(xhr.responseText);
     	 	} else {
     			console.log("actual:" + xhr.responseText)
 			  	var js = JSON.parse(xhr.responseText);
@@ -70,7 +70,7 @@ function createBenchmark() {
 			  	alert (err);
     	 	}
     	} else {
-      		processAddAlgorithmResponse("N/A");
+      		processAddBenchmarkResponse("N/A");
     	}
   	};
 

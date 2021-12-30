@@ -47,6 +47,11 @@ function login() {
 				var token = JSON.parse(xhr.responseText)["token"];
 				console.log("The TOKEN is....." + token);
 				document.getElementById("token").innerHTML = token;
+				
+				if(token === "i5pdrbnddammehueu4dplfpi1m") {
+					document.getElementById("userActivity").disabled = false;
+				}
+				
 	      		processLoginResponse(xhr.responseText);
     	 	} else {
     			console.log("actual:" + xhr.responseText)
