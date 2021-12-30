@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import http.DeleteAlgorithmRequest;
+import http.DeleteUserRequest;
+import model.Classification;
 import model.User;
 
 public class UsersDAO {
@@ -44,6 +47,11 @@ public class UsersDAO {
             ps.setString(3, user.hash);
             ps.setNString(4, user.token);
             ps.execute();
+
+            // data modified, log query
+    		UserActivityDAO ua = new UserActivityDAO();
+    		ua.createUserActivity("", ps.toString()); // set token to empty, anonymous user
+
             return true;
 
         } catch (Exception e) {
@@ -92,6 +100,29 @@ public class UsersDAO {
             ps.close();
             
             return user;
+
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed in getting user: " + e.getMessage());
+        }
+    }
+
+    public List<User> getUsers() throws Exception {
+
+    	List<User> allUsers = new ArrayList<>();
+    	try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + ";");
+            ResultSet resultSet = ps.executeQuery();
+            
+            while (resultSet.next()) {
+                User u = generateUser(resultSet);
+                allUsers.add(u);
+            }
+            
+            resultSet.close();
+            ps.close();
+            
+            return allUsers;
 
         } catch (Exception e) {
         	e.printStackTrace();
@@ -162,12 +193,29 @@ public class UsersDAO {
     }
     
     private User generateUser(ResultSet resultSet) throws Exception {
-    	int idusers  = resultSet.getInt("idusers");
+    	int idusers = resultSet.getInt("idusers");
         String username  = resultSet.getString("username");
         byte[] salt = resultSet.getBytes("salt");
         String hash = resultSet.getString("hash");
         String token = resultSet.getString("token");
         return new User (username, salt, hash, token, idusers);
+    }
+    
+    public boolean deleteUser(DeleteUserRequest req) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE username = ?;");
+            ps.setString(1, req.username);
+            int numAffected = ps.executeUpdate();
+            
+            // data modified, log query
+            
+            ps.close();
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete user: " + e.getMessage());
+        }
     }
 
 }

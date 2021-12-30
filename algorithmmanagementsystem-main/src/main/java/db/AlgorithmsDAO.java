@@ -4,8 +4,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import http.CreateAlgorithmRequest;
+import http.DeleteAlgorithmRequest;
+import http.ReclassifyAlgorithmRequest;
 import model.Algorithm;
-import model.Classification;
 
 public class AlgorithmsDAO {
 	
@@ -21,10 +23,10 @@ public class AlgorithmsDAO {
     	}
 	}
 	
-	public boolean createAlgorithm(Algorithm algorithm) throws Exception {
+	public boolean createAlgorithm(CreateAlgorithmRequest req) throws Exception {
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE name = ?;");
-            ps.setString(1, algorithm.name);
+            ps.setString(1, req.name);
             ResultSet resultSet = ps.executeQuery();
             
             // already present?
@@ -35,10 +37,15 @@ public class AlgorithmsDAO {
             }
 
             ps = conn.prepareStatement("INSERT INTO " + tblName + " (name,description,classification) values(?,?,?);");
-            ps.setString(1, algorithm.name);
-            ps.setString( 2, algorithm.description);
-            ps.setNString(3, algorithm.classification);
+            ps.setString(1, req.name);
+            ps.setString(2, req.description);
+            ps.setNString(3, req.classification);
             ps.execute();
+
+            // data modified, log query
+    		UserActivityDAO ua = new UserActivityDAO();
+    		ua.createUserActivity(req.token, ps.toString());
+
             return true;
 
         } catch (Exception e) {
@@ -74,31 +81,7 @@ public class AlgorithmsDAO {
         String classification = resultSet.getString("classification");
         return new Algorithm (name, description, classification);
     }
-    
-	public boolean searchForAlgorithm(String name) throws Exception {
-        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE name = ?;");
-            ps.setString(1, name);
-            ResultSet resultSet = ps.executeQuery();
-            
-            Algorithm algorithm = null;
-            while (resultSet.next()) {
-                algorithm = generateAlgorithm(resultSet);
-            }
-            resultSet.close();
-            ps.close();
 
-            if (name.equals(algorithm.name)) {
-            	return true;
-            } else {
-            	return false;
-            }
-
-        } catch (Exception e) {
-            throw new Exception("Failed to get algorithm: " + e.getMessage());
-        }
-    }
-	
     public List<Algorithm> getAllAlgorithms(String name) throws Exception {
         
         List<Algorithm> allAlgorithms = new ArrayList<>();
@@ -119,6 +102,44 @@ public class AlgorithmsDAO {
         } catch (Exception e) {
             throw new Exception("Failed in getting algorithms: " + e.getMessage());
         }
+    }
+    
+    public boolean deleteAlgorithm(DeleteAlgorithmRequest req) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE name = ?;");
+            ps.setString(1, req.name);
+            int numAffected = ps.executeUpdate();
+            
+            // data modified, log query
+    		UserActivityDAO ua = new UserActivityDAO();
+    		ua.createUserActivity(req.token, ps.toString());
+            
+            ps.close();
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete algorithm: " + e.getMessage());
+        }
+    }
+    
+    public boolean reclassifyAlgorithm(ReclassifyAlgorithmRequest req) throws Exception {
+    	try {
+    		PreparedStatement ps = conn.prepareStatement("UPDATE " + tblName + " SET classification = ? WHERE name = ?;");
+    		ps.setString(1, req.classification);
+    		ps.setString(2, req.algorithm);
+    		
+    		int numAffected = ps.executeUpdate();
+    		
+    		UserActivityDAO ua = new UserActivityDAO();
+    		ua.createUserActivity(req.token, ps.toString());
+    		
+    		ps.close();
+    		
+    		return (numAffected == 1);
+    	} catch (Exception e) {
+    		throw new Exception("Failed to reclassify algorithm: " + e.getMessage());
+    	}
     }
 
 }

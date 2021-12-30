@@ -4,8 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Algorithm;
-import model.Benchmark;
+import http.CreateImplementationRequest;
+import http.DeleteImplementationRequest;
 import model.Implementation;
 
 public class ImplementationsDAO {
@@ -22,10 +22,10 @@ public class ImplementationsDAO {
     	}
 	}
 	
-	public boolean createImplementation(Implementation implementation) throws Exception {
+	public boolean createImplementation(CreateImplementationRequest req) throws Exception {
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE filename = ?;");
-            ps.setString(1, implementation.fileName);
+            ps.setString(1, req.fileName);
             ResultSet resultSet = ps.executeQuery();
             
             // already present?
@@ -35,39 +35,19 @@ public class ImplementationsDAO {
                 return false;
             }
 
-            ps = conn.prepareStatement("INSERT INTO " + tblName + " (filename,description,algorithm) values(?,?,?);");
-            ps.setString(1, implementation.fileName);
-            ps.setString(2, implementation.description);
-            ps.setString(3, implementation.algorithm);
+            ps = conn.prepareStatement("INSERT INTO " + tblName + " (description,filename,algorithm) values(?,?,?);");
+            ps.setString(1, req.description);
+            ps.setString(2, req.fileName);
+            ps.setString(3, req.algorithm);
             ps.execute();
+            // data modified, log query
+    		UserActivityDAO ua = new UserActivityDAO();
+    		ua.createUserActivity(req.token, ps.toString());
+            
             return true;
 
         } catch (Exception e) {
             throw new Exception("Failed to insert implementation: " + e.getMessage());
-        }
-    }
-	
-	public boolean searchForImplementation(String fileName) throws Exception {
-        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE filename = ?;");
-            ps.setString(1, fileName);
-            ResultSet resultSet = ps.executeQuery();
-            
-            Implementation implementation = null;
-            while (resultSet.next()) {
-                implementation = generateImplementation(resultSet);
-            }
-            resultSet.close();
-            ps.close();
-
-            if (fileName.equals(implementation.fileName)) {
-            	return true;
-            } else {
-            	return false;
-            }
-
-        } catch (Exception e) {
-            throw new Exception("Failed to get fileName: " + e.getMessage());
         }
     }
 
@@ -124,18 +104,36 @@ public class ImplementationsDAO {
         return new Implementation (fileName, description, algorithm);
     }
     
-    public boolean deleteImplementation(Implementation implementation) throws Exception {
+    public boolean deleteImplementation(DeleteImplementationRequest req) throws Exception {
         try {
             PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE filename = ?;");
-            ps.setString(1, implementation.fileName);
+            ps.setString(1, req.filename);
             int numAffected = ps.executeUpdate();
+            
+            // data modified, log query
+    		UserActivityDAO ua = new UserActivityDAO();
+    		ua.createUserActivity(req.token, ps.toString());
+            
             ps.close();
             
             return (numAffected == 1);
 
         } catch (Exception e) {
-            throw new Exception("Failed to insert implementation: " + e.getMessage());
+            throw new Exception("Failed to delete implementation: " + e.getMessage());
         }
+    }
+    
+    public boolean deleteImplementationGivenAlgorithm(Implementation implementation) throws Exception{
+    	try {
+    		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE filename = ?;");
+            ps.setString(1, implementation.fileName);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return(numAffected == 1);
+    	} catch (Exception e) {
+    		throw new Exception("Failed to delete implementation: " + e.getMessage());
+    	}
     }
 
 }

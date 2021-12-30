@@ -45,6 +45,11 @@ public class BenchmarksDAO {
             ps.setString(8, benchmark.manufacturer);
             ps.setString(9, benchmark.implementation);
             ps.execute();
+
+            // data modified, log query
+    		UserActivityDAO ua = new UserActivityDAO();
+    		ua.createUserActivity("", ps.toString()); // set token to empty, anonymous user
+
             return true;
 
         } catch (Exception e) {
@@ -85,30 +90,6 @@ public class BenchmarksDAO {
         String manufacturer = resultSet.getString("manufacturer");
         String implementation = resultSet.getString("implementation");
         return new Benchmark (name, l1cache, l2cache, l3cache, ram, threads, cores, manufacturer, implementation);
-    }
-    
-	public boolean searchForBenchmark(String name) throws Exception {
-        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE name = ?;");
-            ps.setString(1, name);
-            ResultSet resultSet = ps.executeQuery();
-            
-            Benchmark benchmark = null;
-            while (resultSet.next()) {
-                benchmark = generateBenchmark(resultSet);
-            }
-            resultSet.close();
-            ps.close();
-
-            if (name.equals(benchmark.name)) {
-            	return true;
-            } else {
-            	return false;
-            }
-
-        } catch (Exception e) {
-            throw new Exception("Failed to get benchmark: " + e.getMessage());
-        }
     }
 	
     public List<Benchmark> getAllBenchmarks(String implementation) throws Exception {
@@ -153,7 +134,11 @@ public class BenchmarksDAO {
             ps.setString(1, benchmark.implementation);
             int numAffected = ps.executeUpdate();
             ps.close();
-            
+
+            // data modified, log query
+    		UserActivityDAO ua = new UserActivityDAO();
+    		ua.createUserActivity("", ps.toString()); // set token to empty, anonymous user
+
             return(numAffected == 1);
     	} catch (Exception e) {
     		throw new Exception("Failed to delete benchmark: " + e.getMessage());

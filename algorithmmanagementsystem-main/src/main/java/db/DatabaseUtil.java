@@ -1,12 +1,7 @@
 package db;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Random;
 
 public class DatabaseUtil {
 
@@ -24,60 +19,61 @@ public class DatabaseUtil {
 	public static String rdsMySqlDatabaseUrl;
 	public static String dbUsername;
 	public static String dbPassword;
-		
+
 	public final static String jdbcTag = "jdbc:mysql://";
 	public final static String rdsMySqlDatabasePort = "3306";
 	public final static String multiQueries = "?allowMultiQueries=true";
 	   
-	public final static String dbName = "algorithm";           // Whatever Schema you created in tutorial.
-	public final static String testingName = "tmp";       // used for testing (also default created)
-	
+	public final static String dbName = "algorithmdb";  // Whatever database you created in tutorial.
+	public final static String productionSchemaName = "algorithm";  // Whatever schema you created in tutorial.
+	public final static String testingSchemaName = "coverage";      // used for testing / code coverage
+
 	// pooled across all usages.
 	static Connection conn;
- 
+	static boolean useTestDB = false;
+
 	/**
 	 * Singleton access to DB connection to share resources effectively across multiple accesses.
 	 */
-	protected static Connection connect() throws Exception {
+	public static Connection connect() throws Exception {
 		if (conn != null) { return conn; }
 		
-		boolean useTestDB = System.getenv("TESTING") != null;
-		
 		// this is resistant to any SQL-injection attack since we choose one of two possible ones.
-		String schemaName = dbName;
+		String schemaName = productionSchemaName;
 		if (useTestDB) { 
-			schemaName = testingName;
-			System.out.println("USE TEST DB:" + useTestDB);
+			schemaName = testingSchemaName;
+			System.out.println("USE TEST DB: " + testingSchemaName);
 		}
-		
-//		dbUsername = System.getenv("dbUsername");
+
 		dbUsername = "calcAdmin";
 		if (dbUsername == null) {
 			System.err.println("Environment variable dbUsername is not set!");
 		}
-//		dbPassword = System.getenv("dbPassword");
+
 		dbPassword = "password";
 		if (dbPassword == null) {
 			System.err.println("Environment variable dbPassword is not set!");
 		}
-//		rdsMySqlDatabaseUrl = System.getenv("rdsMySqlDatabaseUrl");
-		rdsMySqlDatabaseUrl = "algorithmdb.c5huclabzubo.us-east-1.rds.amazonaws.com";
+
+		rdsMySqlDatabaseUrl = dbName + ".c5huclabzubo.us-east-1.rds.amazonaws.com";
 		if (rdsMySqlDatabaseUrl == null) {
 			System.err.println("Environment variable rdsMySqlDatabaseUrl is not set!");
 		}
 		
 		try {
-			//System.out.println("start connecting......");
 			Class.forName("com.mysql.cj.jdbc.Driver"); 
 			conn = DriverManager.getConnection(
 					jdbcTag + rdsMySqlDatabaseUrl + ":" + rdsMySqlDatabasePort + "/" + schemaName + multiQueries,
 					dbUsername,
 					dbPassword);
-			//System.out.println("Database has been connected successfully.");
 			return conn;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new Exception("Failed in database connection");
 		}
+	}
+
+	public static void setUseTestDb(boolean useTestDb) {
+		useTestDB = useTestDb;
 	}
 }
