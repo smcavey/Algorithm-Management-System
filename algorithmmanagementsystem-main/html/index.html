@@ -5,18 +5,32 @@
 <meta charset="utf-8" />
     <!-- Load JS File Scripts -->
     <script type='text/javascript' src='../js/api.js'></script>
+    
     <script type="text/javascript" src="../js/registerUser.js"></script>
     <script type="text/javascript" src="../js/loginUser.js"></script>
+    
     <script type="text/javascript" src='../js/addClassification.js'></script>
     <script type="text/javascript" src="../js/listAllClassifications.js"></script>
+    <script type="text/javascript" src="../js/removeClassification.js"></script>
+    <script type="text/javascript" src="../js/mergeClassification.js"></script>
+    
     <script type="text/javascript" src="../js/addAlgorithm.js"></script>
     <script type="text/javascript" src="../js/listAllAlgorithms.js"></script>
+    <script type="text/javascript" src="../js/removeAlgorithm.js"></script>
+    <script type="text/javascript" src="../js/reclassifyAlgorithm.js"></script>
+    
+    
     <script type="text/javascript" src="../js/addImplementation.js"></script>
     <script type="text/javascript" src="../js/removeImplementation.js"></script>    
     <script type="text/javascript" src="../js/listAllImplementations.js"></script>
+    
     <script type="text/javascript" src="../js/addBenchmark.js"></script>
     <script type="text/javascript" src="../js/listAllBenchmarks.js"></script>
     <script type="text/javascript" src="../js/removeBenchmark.js"></script>    
+    
+    <script type="text/javascript" src="../js/addProblemInstance.js"></script>
+    <script type="text/javascript" src="../js/listAllProblemInstance.js"></script>
+    <script type="text/javascript" src="../js/removeProblemInstance.js"></script>
     
     
  	
@@ -118,12 +132,16 @@
   </div>  
 
     <button type="button" id="addClassificaton" onclick="showClassificationForm()">Add Classification</button>
+    <button type="button" id="mergeClassification" onclick="showMergeForm()">Merge Classification</button>
+        
     <button type="button" id="addAlgorithm" onclick="showAlgorithmForm()">Add Algorithm</button>
+    <button type="button" id="reclassifyAlgorithm" onclick="showReclassifyForm()">Reclassify Algorithm</button>
+
     <button type="button" id="addImplementation" onclick="showImplementationForm()">Add Implementation</button>
     <!--not yet functional-->
     <button type="button" id="addProblemInstance" onclick="showProblemInstanceForm()">Add Problem Instance</button>
     <button type="button" id="addBenchmark" onclick="showBenchmarkForm()">Add Benchmark</button>
-	<button type="button" id="userActivity" onclick="window.location='userActivity.html';">View User Activity and Registered Users</button>
+	<button type="button" id="userActivity" onclick="window.location='userActivity.html';" disabled>View User Activity and Registered Users</button>
 	
 
     <div class="form-popup" id="classificationForm">
@@ -148,10 +166,61 @@
               id="classificationDesc"
               value=""
               required
+            />    
+            <label for="parentClassificationName"><b>Parent</b></label>
+            <input
+              class="textInput"
+              name="parentClassificationName"     
+              type="text"
+              placeholder="Parent Classification Name"
+              value=""
+              id="parentClassificationName"
+              required
+            />  
+            <br></br>
+            <button type="button" id="addClassification" onclick="createClassification()">Submit</button>
+            <button type="button" class="cancelClassificationbtn" onclick="closeClassificationForm()">Close</button>
+          </center>
+        </form>
+      </div>
+      
+      <div class="form-popup" id="mergeForm">
+        <form class="form-container">
+          <h2><center>Merging Classification</center></h2>
+          <center>
+            <label for="classification1Name"><b>Classification 1</b></label>
+            <input
+              class="textInput"
+              name="classification1Name"     
+              type="text"
+              placeholder="First Classification Name"
+              value=""
+              id="classification1Name"
+              required
+            />
+            <label for="classification2Name"><b>Classification 2</b></label>
+            <input
+              class="textInput"
+              name="classification2Name"
+    		  type="text"
+              placeholder="Second Classification Name"
+              id="classification2Name"
+              value=""
+              required
+            />      
+            <label for="newClassification"><b>New Classification</b></label>
+            <input
+              class="textInput"
+              name="newClassification"
+    		  type="text"
+              placeholder="New Classification Name"
+              id="newClassificationName"
+              value=""
+              required
             />      
             <br></br>
-            <button type="button" id="addClassification" onclick="createClassification()" >Submit</button>
-            <button type="button" class="cancelClassificationbtn" onclick="closeClassificationForm()">Close</button>
+            <button type="button" id="mergeClassification" onclick="merge()">Submit</button>
+            <button type="button" class="cancelMergebtn" onclick="closeMergeForm()">Close</button>
           </center>
         </form>
       </div>
@@ -192,6 +261,37 @@
             <br></br>
             <button type="button" id="addAlgorithm" onclick="createAlgorithm()" >Submit</button>
             <button type="button" class="cancelAlgorithmbtn" onclick="closeAlgorithmForm()">Close</button>
+          </center>
+        </form>
+      </div>
+      
+      <div class="form-popup" id="reclassifyForm">
+        <form class="form-container">
+          <h2><center>Describe Classification</center></h2>
+          <center>
+            <label for="reclassifyAlgorithm"><b>Algorithm</b></label>
+            <input
+              class="textInput"
+              name="reclassifyAlgorithm"     
+              type="text"
+              placeholder="Algorithm Name"
+              value=""
+              id="reclassifyAlgorithmName"
+              required
+            />
+            <label for="newClassification"><b>New Classification</b></label>
+            <input
+              class="textInput"
+              name="newReclassifyClassification"     
+              type="text"
+              placeholder="New Classification Name"
+              value=""
+              id="newReclassifyClassification"
+              required
+            />      
+            <br></br>
+            <button type="button" id="reclassifyAlgorithm" onclick="reclassify()">Submit</button>
+            <button type="button" class="cancelReclassifybtn" onclick="closeReclassifyForm()">Close</button>
           </center>
         </form>
       </div>
@@ -263,13 +363,23 @@
           <center>
             <label for="pi_algorithmName"><b> Algorithm Name</b></label>
             <input
-                class="textInput"
+              class="textInput"
               name="pi_algorithmName"     
               type="text"
               placeholder="Algorithm Name"
               value=""
               id="pi_algorithmName"
               required
+            />
+            <label for="ProblemInstanceFileName"><b>Problem Instance File Name</b></label>
+            <input
+                class="textInput"
+                name="piFileName"     
+                type="text"
+                placeholder="i.e. BestCase.txt"
+                value=""
+                id="piFileName"
+                required
             />
             <label for="problemInstanceUpload"><b>Upload Problem Instance:</b></label>
             <input 
@@ -422,11 +532,23 @@ function showClassificationForm() {
 function closeClassificationForm() {
 	document.getElementById("classificationForm").style.display = "none";
 }
+function showMergeForm() {
+	document.getElementById("mergeForm").style.display = "block";
+}
+function closeMergeForm() {
+	document.getElementById("mergeForm").style.display = "none";
+}
 function showAlgorithmForm() {
 	document.getElementById("algorithmForm").style.display = "block";
 }
 function closeAlgorithmForm() {
 	document.getElementById("algorithmForm").style.display = "none";
+}
+function showReclassifyForm() {
+	document.getElementById("reclassifyForm").style.display = "block";
+}
+function closeReclassifyForm() {
+	document.getElementById("reclassifyForm").style.display = "none";
 }
 function showImplementationForm() {
 	document.getElementById("implementationForm").style.display = "block";

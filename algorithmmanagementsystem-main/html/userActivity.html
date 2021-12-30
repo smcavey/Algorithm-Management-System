@@ -4,15 +4,89 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8" />
 
+    <script type='text/javascript' src='../js/api.js'></script>
+    <script type='text/javascript' src='../js/listAllUsers.js'></script>
+    <script type='text/javascript' src='../js/userActivity.js'></script>
+    <script type='text/javascript' src='../js/removeUser.js'></script>
+    
+
+
 <title>User Activity</title>
 <h1><center>Registered Users</center></h1>
 
+<style>
+* {
+  box-sizing: border-box;
+}
+.form-popup {
+   display: none;
+   position: fixed;
+   border:3px solid #f1f1f1;
+   z-index: 9;
+   background: white;
+}
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
 </head>
 <body>
 
     <button type="button" id="backToHomePage" onclick="window.location='index.html';">Back</button>
-    <button type="button" id="viewUserActivity">View Users Activity</button>
+
+	<div class="form-popup" id="userActivity">
+        <form class="form-container">
+          <h2><center>User Activity Log</center></h2>
+          <center>
+          <div id=userActivityLog>
+          
+          </div>
+          <br></br>
+          <button type="button" class="closeUserActivity" onclick="closeUserActivity()">Close</button>
+          </center>
+        </form>
+      </div>
+	
 
 
+	<div id="usersList"></div>
+	
 </body>
+
+<script type="text/javascript">
+ 	
+ 		document.addEventListener("DOMContentLoaded", function() {
+ 			
+ 			function initialize() {
+ 				
+ 				console.log("initializing...");
+ 				refreshUsersList();
+ 			}
+ 			
+ 			initialize();
+ 			
+ 		});
+ 	
+</script>
+
+<script>
+
+function showUserActivity() {
+	document.getElementById("userActivity").style.display = "block";
+}
+function closeUserActivity() {
+	document.getElementById("userActivity").style.display = "none";
+}
+
+</script>
+
 </html>
